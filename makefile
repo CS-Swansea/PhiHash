@@ -7,7 +7,7 @@
 CXX=icpc
 
 # Compiler and Linker flags
-CXXFLAGS= -lcrypto
+CXXFLAGS= -lcrypto -lssl
 LXXFLAGS= 
 
 # Inlude and Library paths
