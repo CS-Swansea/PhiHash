@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
+#include <cstdlib>
 #include <ctime>
 #include <cmath>
 #include <omp.h>
