@@ -18,8 +18,7 @@ int main() {
 
 	delete [] hash;
 	delete [] hashStr;
-
-	system("PAUSE");
+	
 	return 0;
 };
 
