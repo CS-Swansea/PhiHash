@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <ctime>
+#include <cmath>
 #include <omp.h>
 #include "sha512.hpp"
 
