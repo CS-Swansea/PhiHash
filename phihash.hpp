@@ -1,10 +1,13 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
-#include <openssl/sha.h>
+#include "sha512.hpp"
 
-#define HASH_STR ((SHA512_DIGEST_LENGTH * 2) + 1)
+#define HASH_LEN 64
+#define HASH_STR ((HASH_LEN * 2) + 1)
 
-inline void genHash(char *a, char *hash);
+inline void genHash(char *a, unsigned char *hash);
 
-inline bool cmpHash(char *a, char *b);
+inline bool cmpHash(unsigned char *a, unsigned char *b);
 
-inline void hash2Str(char *hash, char *a);
+inline void hash2Str(unsigned char *hash, char *a);

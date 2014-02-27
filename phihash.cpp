@@ -4,35 +4,38 @@
 int main() {
 
 	char *hw = "Hello World!!!";
-	char hash[SHA512_DIGEST_LENGTH];
-	char hashStr[HASH_STR];
+	unsigned char * hash = new unsigned char[HASH_LEN];
+	char * hashStr = new char[HASH_STR];
 
-	memset(&hash, 0, SHA512_DIGEST_LENGTH);
-	memset(&hashStr, 0, HASH_STR);
+	memset(hash, 0, HASH_LEN);
+	memset(hashStr, 0, HASH_STR);
 
-	getHash(hw, &hash);
-	hash2Str(&hash, &hashStr);
+	genHash(hw, hash);
+	hash2Str(hash, hashStr);
 
 	std::cout << hw << std::endl;
-	std::cout << hash << std::endl;
 	std::cout << hashStr << std::endl;
 
+	delete [] hash;
+	delete [] hashStr;
+
+	system("PAUSE");
 	return 0;
 };
 
-inline void genHash(char *a, char *hash) {
-	SHA512((unsigned char*)a, SHA512_DIGEST_LENGTH, (unsigned char*)hash);    
+inline void genHash(char *a, unsigned char *hash) {
+	sha512((const unsigned char *) a, strlen(a), (unsigned char *) hash, 0);
 };
 
-inline bool cmpHash(char *a, char *b) {
-	for (int i = 0; i < SHA512_DIGEST_LENGTH; i++) {
+inline bool cmpHash(unsigned char *a, unsigned char *b) {
+	for (int i = 0; i < HASH_LEN; i++) {
 		if (a[i] > b[i]) return false;
 	}
 	return true;
 };
 
-inline void hash2Str(char *hash, char *a) {
-	for (int i = 0; i < SHA512_DIGEST_LENGTH; i++) {
-        sprintf(&(a[i*2]), "%02x", (unsigned int)hash[i]);
- 	}
+inline void hash2Str(unsigned char *hash, char *a) {
+	for (int i = 0; i < HASH_LEN; i++) {
+		sprintf(&(a[i * 2]), "%02X", (unsigned char)hash[i]);
+	}
 };
