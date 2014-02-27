@@ -20,6 +20,6 @@
 
 inline void genHash(char *a, unsigned char *hash);
 
-inline bool cmpHash(unsigned char *a, unsigned char *b);
+inline bool cmpHash(char *a, char *b);
 
 inline void hash2Str(unsigned char *hash, char *a);
