@@ -4,10 +4,10 @@
 #
 
 # Use Intel C++ Compiler
-CXX=g++
+CXX=icpc
 
 # Compiler and Linker flags
-CXXFLAGS=
+CXXFLAGS= 
 LXXFLAGS= 
 
 # Inlude and Library paths
