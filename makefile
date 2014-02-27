@@ -4,7 +4,7 @@
 #
 
 # Use Intel C++ Compiler
-CXX=icpc
+CXX=g++
 
 # Compiler and Linker flags
 CXXFLAGS= -lcrypto -lssl
