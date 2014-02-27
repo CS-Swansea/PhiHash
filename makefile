@@ -7,7 +7,7 @@
 CXX=g++
 
 # Compiler and Linker flags
-CXXFLAGS= -lcrypto -lssl
+CXXFLAGS=
 LXXFLAGS= 
 
 # Inlude and Library paths
