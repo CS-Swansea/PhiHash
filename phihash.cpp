@@ -10,6 +10,9 @@ int main() {
 	char * minHashStr = new char[HASH_STR];
 	memset(minHashStr, 0, HASH_STR);
 
+	char * hashStr = new char[HASH_STR];
+	memset(hashStr, 0, HASH_STR);
+
 	char *str = new char[HASH_LEN + 1];
 	unsigned char *ustr = (unsigned char *) str;
 	str[HASH_LEN] = '\0';
@@ -22,9 +25,9 @@ int main() {
 	memset(hash, 0, HASH_LEN);
 
 	memcpy(minStr, str, HASH_LEN+1);
-	genHash(minStr, minHash);
+	genHash(minStr, hash);
 
-	hash2Str(minHash, minHashStr);
+	hash2Str(hash, minHashStr);
 	std::cout << minStr << std::endl << std::endl;
 	std::cout << minHashStr << std::endl;
 
@@ -43,14 +46,15 @@ int main() {
 		}
 
 		genHash(str, hash);
+		hash2Str(hash, hashStr);
 
-		if (cmpHash(hash, minHash)) {
-			memcpy(minHash, hash, HASH_LEN);
+		if (cmpHash(hashStr, minHashStr)) {
+			memcpy(minHashStr, hashStr, HASH_LEN);
 			memcpy(minStr, str, HASH_LEN);
 		}
 	}
 
-	hash2Str(minHash, minHashStr);
+	
 	std::cout << minStr << std::endl << std::endl;
 	std::cout << minHashStr << std::endl;
 
@@ -65,11 +69,18 @@ inline void genHash(char *a, unsigned char *hash) {
 	sha512((unsigned char *)a, HASH_LEN, hash, 0);
 };
 
-inline bool cmpHash(unsigned char *a, unsigned char *b) {
+inline bool cmpHash(char *a, char *b) {
 	for (int i = 0; i < HASH_LEN; i++) {
-		if ((int) a[i] < (int) b[i]) return true;
+		if (a[i] < b[i]) {
+			return true;
+		}
+		else {
+			if (a[i] > b[i]) {
+				return false;
+			}
+		}
 	}
-	return false;
+	return true;
 };
 
 inline void hash2Str(unsigned char *hash, char *a) {
