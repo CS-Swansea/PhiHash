@@ -92,6 +92,7 @@
 /*
 * Round constants
 */
+__declspec(target(mic))
 static const uint64_t K[80] =
 {
 	UL64(0x428A2F98D728AE22), UL64(0x7137449123EF65CD),
@@ -139,6 +140,7 @@ static const uint64_t K[80] =
 /*
 * SHA-512 context setup
 */
+__declspec(target(mic))
 void sha512_starts(sha512_context *ctx, int is384)
 {
 	ctx->total[0] = 0;
@@ -172,6 +174,7 @@ void sha512_starts(sha512_context *ctx, int is384)
 	ctx->is384 = is384;
 }
 
+__declspec(target(mic))
 void sha512_process(sha512_context *ctx, const unsigned char data[128])
 {
 	int i;
@@ -243,6 +246,7 @@ void sha512_process(sha512_context *ctx, const unsigned char data[128])
 /*
 * SHA-512 process buffer
 */
+__declspec(target(mic))
 void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
 {
 	size_t fill;
@@ -279,6 +283,7 @@ void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
 		memcpy((void *) (ctx->buffer + left), input, ilen);
 }
 
+__declspec(target(mic))
 static const unsigned char sha512_padding[128] =
 {
 	0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -294,6 +299,7 @@ static const unsigned char sha512_padding[128] =
 /*
 * SHA-512 final digest
 */
+__declspec(target(mic))
 void sha512_finish(sha512_context *ctx, unsigned char output[64])
 {
 	size_t last, padn;
@@ -330,6 +336,7 @@ void sha512_finish(sha512_context *ctx, unsigned char output[64])
 /*
 * output = SHA-512( input buffer )
 */
+__declspec(target(mic))
 void sha512(const unsigned char *input, size_t ilen,
 	unsigned char output[64], int is384)
 {

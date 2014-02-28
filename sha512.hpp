@@ -74,6 +74,7 @@ extern "C" {
 	/**
 	* \brief          SHA-512 context structure
 	*/
+	__declspec(target(mic))
 	typedef struct
 	{
 		uint64_t total[2];          /*!< number of bytes processed  */
@@ -92,6 +93,7 @@ extern "C" {
 	* \param ctx      context to be initialized
 	* \param is384    0 = use SHA512, 1 = use SHA384
 	*/
+	__declspec(target(mic))
 	void sha512_starts(sha512_context *ctx, int is384);
 
 	/**
@@ -101,6 +103,7 @@ extern "C" {
 	* \param input    buffer holding the  data
 	* \param ilen     length of the input data
 	*/
+	__declspec(target(mic))
 	void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen);
 
 	/**
@@ -109,6 +112,7 @@ extern "C" {
 	* \param ctx      SHA-512 context
 	* \param output   SHA-384/512 checksum result
 	*/
+	__declspec(target(mic))
 	void sha512_finish(sha512_context *ctx, unsigned char output[64]);
 
 }
@@ -123,10 +127,12 @@ extern "C" {
 	* \param output   SHA-384/512 checksum result
 	* \param is384    0 = use SHA512, 1 = use SHA384
 	*/
+	__declspec(target(mic))
 	void sha512(const unsigned char *input, size_t ilen,
 		unsigned char output[64], int is384);
 
 	/* Internal use */
+	__declspec(target(mic))
 	void sha512_process(sha512_context *ctx, const unsigned char data[128]);
 }
 
