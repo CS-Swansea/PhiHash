@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include <chrono>
 #include <omp.h>
 #include "sha512.hpp"
 
@@ -38,6 +39,13 @@
  * as threads overlap.
  */
 #define WORK_SIZE 10000
+
+/*
+ * String permutation schedules
+ */
+#define __RND_PERMUTE__ 1
+#define __INC_PERMUTE__ 2
+#define __PERMUTE_SCHEDULE__ 1
 
 /**
 * Compute the SHA-512 Hash of a 64 Character String
@@ -82,7 +90,7 @@ inline void hash2Str(unsigned char *hash, char *hashStr);
  * @param str
  *		A 64 Character buffer for the string to permutate
  */
-inline void incrementStr(unsigned char *str);
+inline void permuteStr(unsigned char *str);
 
 /**
 * Fills a 64 Character String buffer with a random
@@ -102,5 +110,26 @@ inline void randomStr(unsigned char *str);
 * @return Returns a pointer to the
 *		first element of the buffer
 */
-template<typename T>
-inline T* allocEmptyBuffer(size_t len);
+inline void* allocEmptyBuffer(size_t len);
+
+/**
+* Seeds the <state> of our threadsafe RNG
+*
+* @param state
+*		An integer reference which stores the state of the RNG
+*/
+inline int seedThreadSafeRNG(int id) {
+	return 25234 + 17 * (id * time(NULL));
+}
+
+/**
+ * This is a thread safe random number generator, seed it using the 
+ * accompanying function
+ *
+ * @param state
+ *		An integer reference which stores the state of the RNG
+ */
+inline int threadSafeRNG(int &state) {
+	// & 0x7fffffff is equivalent to modulo with RNG_MOD = 2^31
+	return (state = (state * 1103515245 + 12345) & 0x7fffffff);
+}
