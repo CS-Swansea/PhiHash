@@ -80,7 +80,7 @@ inline bool cmpHash(char *a, char *b) {
 			}
 		}
 	}
-	return true;
+	return false;
 };
 
 inline void hash2Str(unsigned char *hash, char *a) {
