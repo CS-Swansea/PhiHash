@@ -30,67 +30,72 @@ int main() {
 		// Start the clock
 		double t1 = omp_get_wtime();
 
-		bool newHash = false;
-		#pragma omp parallel private(RNG_STATE)
+		#pragma offload target(mic:0) inout(minStr : length(HASH+1), minHashStr : length(HASH_STR))
 		{
-			// Setup RNG
-			RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
 
-			// A thread min buffers
-			char *minThreadStr = (char*) allocEmptyBuffer(HASH_LEN + 1);
-			char *minThreadHashStr = (char*) allocEmptyBuffer(HASH_STR);
-
-			// Thread compute buffers
-			char *str = (char*) allocEmptyBuffer(HASH_LEN + 1);
-			char *hashStr = (char*) allocEmptyBuffer(HASH_STR);
-
-			// Intermediate buffer for hashing
-			unsigned char *hashBuffer = (unsigned char*) allocEmptyBuffer(HASH_LEN);
-
-			// Perform initial random hash so we have something to compare off of initially
-			randomStr((unsigned char*) minThreadStr);
-			genHash(minThreadStr, hashBuffer);
-			hash2Str(hashBuffer, minThreadHashStr);
-
-			// Copy the random string used to the work buffer
-			memcpy(str, minThreadStr, HASH_LEN);
-
-			// Compute <WORK_SIZE> hashes then compare them to the host global
-			for (int i = 0; i < WORK_SIZE; i++) {
-				// Increment the string or randomize it if it overflows
-				permuteStr((unsigned char*) str);
-
-				genHash(str, hashBuffer);
-				hash2Str(hashBuffer, hashStr);
-
-				// Compare the new hash to the local minima
-				if (cmpHash(hashStr, minThreadHashStr)) {
-					// Blit the new string and hash to the local buffers
-					memcpy(minThreadHashStr, hashStr, HASH_STR);
-					memcpy(minThreadStr, str, HASH_LEN + 1);
-				}
-			}
-
-			#pragma omp critical
+			bool newHash = false;
+			#pragma omp parallel private(RNG_STATE)
 			{
-				// Compare the new hash to the local minima
-				if (cmpHash(minThreadHashStr, minHashStr)) {
-					// Blit the new string and hash to the local buffers
-					memcpy(minHashStr, minThreadHashStr, HASH_STR);
-					memcpy(minStr, minThreadStr, HASH_LEN + 1);
+				// Setup RNG
+				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
 
-					newHash = true;
+				// A thread min buffers
+				char *minThreadStr = (char*) allocEmptyBuffer(HASH_LEN + 1);
+				char *minThreadHashStr = (char*) allocEmptyBuffer(HASH_STR);
+
+				// Thread compute buffers
+				char *str = (char*) allocEmptyBuffer(HASH_LEN + 1);
+				char *hashStr = (char*) allocEmptyBuffer(HASH_STR);
+
+				// Intermediate buffer for hashing
+				unsigned char *hashBuffer = (unsigned char*) allocEmptyBuffer(HASH_LEN);
+
+				// Perform initial random hash so we have something to compare off of initially
+				randomStr((unsigned char*) minThreadStr);
+				genHash(minThreadStr, hashBuffer);
+				hash2Str(hashBuffer, minThreadHashStr);
+
+				// Copy the random string used to the work buffer
+				memcpy(str, minThreadStr, HASH_LEN);
+
+				// Compute <WORK_SIZE> hashes then compare them to the host global
+				for (int i = 0; i < WORK_SIZE; i++) {
+					// Increment the string or randomize it if it overflows
+					permuteStr((unsigned char*) str);
+
+					genHash(str, hashBuffer);
+					hash2Str(hashBuffer, hashStr);
+
+					// Compare the new hash to the local minima
+					if (cmpHash(hashStr, minThreadHashStr)) {
+						// Blit the new string and hash to the local buffers
+						memcpy(minThreadHashStr, hashStr, HASH_STR);
+						memcpy(minThreadStr, str, HASH_LEN + 1);
+					}
 				}
+
+				#pragma omp critical
+				{
+					// Compare the new hash to the local minima
+					if (cmpHash(minThreadHashStr, minHashStr)) {
+						// Blit the new string and hash to the local buffers
+						memcpy(minHashStr, minThreadHashStr, HASH_STR);
+						memcpy(minStr, minThreadStr, HASH_LEN + 1);
+
+						newHash = true;
+					}
+				}
+
+				// Cleanup thread buffers
+				delete [] str;
+				delete [] hashStr;
+
+				delete [] minThreadStr;
+				delete [] minThreadHashStr;
+
+				delete [] hashBuffer;
 			}
 
-			// Cleanup thread buffers
-			delete[] str;
-			delete[] hashStr;
-
-			delete [] minThreadStr;
-			delete [] minThreadHashStr;
-
-			delete [] hashBuffer;
 		}
 
 		// Stop the clock
