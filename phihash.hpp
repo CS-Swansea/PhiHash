@@ -27,8 +27,9 @@
  * Definitions for the length of a hash buffer and 
  * a corresponding string buffer...
  */
+#define HASH_MIC 65
 #define HASH_LEN 64
-#define HASH_STR ((HASH_LEN * 2) + 1)
+#define HASH_STR 129
 
 /*
  * How many hashes to compute perthread before 

@@ -30,10 +30,12 @@ int main() {
 		// Start the clock
 		double t1 = omp_get_wtime();
 
-		#pragma offload target(mic:0) inout(minStr : length(HASH+1), minHashStr : length(HASH_STR))
-		{
+		bool newHash;
 
-			bool newHash = false;
+		#pragma offload target(mic:0) out(newHash) inout(minStr : length(HASH_MIC), minHashStr : length(HASH_STR))
+		{
+			newHash = false;
+
 			#pragma omp parallel private(RNG_STATE)
 			{
 				// Setup RNG
