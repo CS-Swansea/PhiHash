@@ -56,8 +56,7 @@
  *  with this program; if not, write to the Free Software Foundation, Inc.,
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
- #include "sha512.hpp"
-#include <cstdio>
+#include "sha512.hpp"
 
 /*
 * 64-bit integer manipulation macros (big endian)
