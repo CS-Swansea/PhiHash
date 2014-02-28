@@ -7,6 +7,10 @@
 #include <omp.h>
 #include "sha512.hpp"
 
+/**
+ * Simple PAUSE macro to stop Visual Studio from 
+ * closing the console when the program terminates... 
+ */
 #if defined(_MSC_VER)
 #define PAUSE system("PAUSE");
 #else
