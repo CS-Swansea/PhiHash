@@ -1,3 +1,8 @@
+/*
+ * Force the compiler to shutup about our using 'sprintf'
+ * We've hard coded the buffer sizes and there's no user input
+ * so nothing should be able to go wrong... (famous last words)
+ */
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
@@ -7,7 +12,7 @@
 #include <omp.h>
 #include "sha512.hpp"
 
-/**
+/*
  * Simple PAUSE macro to stop Visual Studio from 
  * closing the console when the program terminates... 
  */
@@ -17,13 +22,55 @@
 #define PAUSE 
 #endif
 
-#define ITT 10000
-
+/*
+ * Definitions for the length of a hash buffer and 
+ * a corresponding string buffer...
+ */
 #define HASH_LEN 64
 #define HASH_STR ((HASH_LEN * 2) + 1)
 
-inline void genHash(char *a, unsigned char *hash);
+/*
+ * How many hashes to compute perthread before 
+ * combining results...
+ *
+ * A higher value will reduce bottlenecks, but 
+ * increase the likelihood of work duplication
+ * as threads overlap.
+ */
+#define WORK_SIZE 10000
 
-inline bool cmpHash(char *a, char *b);
+/**
+* Compute the SHA-512 Hash of a 64 Character String
+*
+* @param input
+*		A 64 Readable Character ASCII string to be hashed
+*
+* @param hash
+*		A 64 byte result buffer for the hash
+*/
+inline void genHash(char *input, unsigned char *hash);
 
-inline void hash2Str(unsigned char *hash, char *a);
+/**
+* Compare two SHA-512 Hashes
+*
+* @param newHash
+*		A 64 byte buffer for the new hash to compare
+*
+* @param oldHash
+*		A 64 byte buffer for the old hash
+*
+* @return Returns true if the new hash has a lower
+*		hexidecimal value than the old one
+*/
+inline bool cmpHash(char *newHash, char *oldHash);
+
+/**
+* Convert the SHA-512 Hash to a 128 Character Hexidecimal String
+*
+* @param hash
+*		A 64 byte buffer for the hash
+*
+* @param hashStr
+*		A 129 Character (128 plus a '\0' byte) result buffer for the string
+*/
+inline void hash2Str(unsigned char *hash, char *hashStr);
