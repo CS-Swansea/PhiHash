@@ -11,6 +11,7 @@
 #include <cmath>
 #include <chrono>
 #include <omp.h>
+
 #include "sha512.hpp"
 
 /*

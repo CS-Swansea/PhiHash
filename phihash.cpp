@@ -11,8 +11,6 @@ int RNG_STATE;
  */
 int main() {
 
-	typedef std::chrono::high_resolution_clock Clock;
-
 	// Setup RNG
 	RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
 
@@ -30,7 +28,7 @@ int main() {
 	while (true) {
 
 		// Start the clock
-		auto t1 = Clock::now();
+		double t1 = omp_get_wtime();
 
 		bool newHash = false;
 		#pragma omp parallel private(RNG_STATE)
@@ -96,13 +94,11 @@ int main() {
 		}
 
 		// Stop the clock
-		auto t2 = Clock::now() - t1;
-		using std::chrono::duration_cast;
-		//nanoseconds ns = duration_cast<nanoseconds>(t2);
-		//std::cout << " Hash/s : " << (unsigned long long)t2 << std::endl << std::endl;
+		double t2 = (double) (WORK_SIZE * omp_get_max_threads()) / (omp_get_wtime() - t1);
+		std::cout << std::flush << " Cores: " << omp_get_max_threads() << " Hash/s : " << t2 << '\r';
 
 		if (newHash) {
-			std::cout << " String : " << minStr << std::endl << std::endl;
+			std::cout << std::endl << std::endl << " String : " << minStr << std::endl << std::endl;
 			std::cout << "Minimum : " << minHashStr << std::endl << std::endl;
 		}
 	}
@@ -215,6 +211,6 @@ inline void randomStr(unsigned char *str) {
 */
 inline void* allocEmptyBuffer(size_t len) {
 	void* ptr = new char[len];
-	memset(ptr, 0, len);
+	//memset(ptr, 0, len);
 	return ptr;
 };
