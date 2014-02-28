@@ -4,6 +4,7 @@
  * A local copy of this variable 
  * name will exist in each thread... 
  */
+__declspec(target(mic))
 int RNG_STATE;
 
 /**
