@@ -1,7 +1,7 @@
 #include "phihash.hpp"
 
 /**
- * Program entry point
+ * Program entry point 
  */
 int main() {
 
