@@ -74,3 +74,33 @@ inline bool cmpHash(char *newHash, char *oldHash);
 *		A 129 Character (128 plus a '\0' byte) result buffer for the string
 */
 inline void hash2Str(unsigned char *hash, char *hashStr);
+
+/**
+ * Increments a 64 Character String buffer to the next logical 
+ * permutation of Readable ASCII Characters
+ *
+ * @param str
+ *		A 64 Character buffer for the string to permutate
+ */
+inline void incrementStr(unsigned char *str);
+
+/**
+* Fills a 64 Character String buffer with a random
+* permutation of Readable ASCII Characters
+*
+* @param str
+*		A 64 Character buffer for the string to randomize
+*/
+inline void randomStr(unsigned char *str);
+
+/**
+* Create an empty buffer
+*
+* @param len
+*		The length of the buffer
+*
+* @return Returns a pointer to the
+*		first element of the buffer
+*/
+template<typename T>
+inline T* allocEmptyBuffer(size_t len);

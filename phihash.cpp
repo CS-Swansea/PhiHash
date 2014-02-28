@@ -7,64 +7,13 @@ int main() {
 
 	srand(time(NULL));
 
-	char *minStr = new char[HASH_LEN + 1];
-	unsigned char *minHash = new unsigned char[HASH_LEN + 1];
-	char * minHashStr = new char[HASH_STR];
-	memset(minHashStr, 0, HASH_STR);
-
-	char * hashStr = new char[HASH_STR];
-	memset(hashStr, 0, HASH_STR);
-
-	char *str = new char[HASH_LEN + 1];
-	unsigned char *ustr = (unsigned char *) str;
-	str[HASH_LEN] = '\0';
-	
-	for (int i = 0; i < HASH_LEN; i++) {
-		str[i] = 32 + ((unsigned char) (rand() % 95));
+	for (int i = 32; i <= 126; i++) {
+		std::cout << (char) i;
 	}
 
-	unsigned char * hash = new unsigned char[HASH_LEN];
-	memset(hash, 0, HASH_LEN);
+	std::cout << std::endl;
 
-	memcpy(minStr, str, HASH_LEN+1);
-	genHash(minStr, hash);
-
-	hash2Str(hash, minHashStr);
-	std::cout << minStr << std::endl << std::endl;
-	std::cout << minHashStr << std::endl << std::endl;
-
-	for (int i = 0; i < WORK_SIZE; i++) {
-		
-		int c = 63;
-		while (c >= 0 && ustr[c] >= 132) c--;
-		
-		if (c < 0) {
-			for (int i = 0; i < HASH_LEN; i++) {
-				str[i] = 32 + ((unsigned char) (rand() % 95));
-			}
-		}
-		else {
-			ustr[c]++;
-		}
-
-		genHash(str, hash);
-		hash2Str(hash, hashStr);
-
-		if (cmpHash(hashStr, minHashStr)) {
-			memcpy(minHashStr, hashStr, HASH_LEN);
-			memcpy(minStr, str, HASH_LEN);
-
-			std::cout << minStr << std::endl << std::endl;
-			std::cout << minHashStr << std::endl;
-		}
-	}
-
-	
-	std::cout << minStr << std::endl << std::endl;
-	std::cout << minHashStr << std::endl;
-
-	delete [] hash;
-	delete [] minHashStr;
+	char *minStr = allocEmptyBuffer(HASH_LEN+1);
 
 	PAUSE
 	return 0;
@@ -120,4 +69,52 @@ inline void hash2Str(unsigned char *hash, char *hashStr) {
 	for (int i = 0; i < HASH_LEN; i++) {
 		sprintf(&(hashStr[i * 2]), "%02X", hash[i]);
 	}
+};
+
+/**
+* Increments a 64 Character String buffer to the next logical
+* permutation of Readable ASCII Characters
+*
+* @param str
+*		A 64 Character buffer for the string to permutate
+*/
+inline void incrementStr(unsigned char *str) {
+	int c = 63;
+	while (c >= 0 && str[c] >= 126) c--;
+
+	if (c > -1) {
+		str[c]++;
+		return;
+	}
+
+	randomStr(str);
+};
+
+/**
+* Fills a 64 Character String buffer with a random 
+* permutation of Readable ASCII Characters
+*
+* @param str
+*		A 64 Character buffer for the string to randomize
+*/
+inline void randomStr(unsigned char *str) {
+	for (int i = 0; i < HASH_LEN; i++) {
+		str[i] = 32 + ((unsigned char) (rand() % 95));
+	}
+};
+
+/**
+* Create an empty buffer
+*
+* @param len
+*		The length of the buffer
+*
+* @return Returns a pointer to the
+*		first element of the buffer
+*/
+template<typename T>
+inline T* allocEmptyBuffer(size_t len) {
+	T* ptr = new T[len];
+	memset(ptr, 0, len * sizeof(T));
+	return ptr;
 };
