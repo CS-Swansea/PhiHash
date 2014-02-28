@@ -1,5 +1,5 @@
 # Auto-generated makefile. Modify this as you need. 
-# !!! Remember to use the CXX prefix to reference the "ipcp" compiler
+# !!! Remember to use the CXX prefix to reference the "icpc" compiler
 #     instead of "g++"
 #
 
