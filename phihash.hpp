@@ -58,6 +58,7 @@
 * @param hash
 *		A 64 byte result buffer for the hash
 */
+__declspec(target(mic))
 inline void genHash(char *input, unsigned char *hash);
 
 /**
@@ -72,6 +73,7 @@ inline void genHash(char *input, unsigned char *hash);
 * @return Returns true if the new hash has a lower
 *		hexidecimal value than the old one
 */
+__declspec(target(mic))
 inline bool cmpHash(char *newHash, char *oldHash);
 
 /**
@@ -83,6 +85,7 @@ inline bool cmpHash(char *newHash, char *oldHash);
 * @param hashStr
 *		A 129 Character (128 plus a '\0' byte) result buffer for the string
 */
+__declspec(target(mic))
 inline void hash2Str(unsigned char *hash, char *hashStr);
 
 /**
@@ -92,6 +95,7 @@ inline void hash2Str(unsigned char *hash, char *hashStr);
  * @param str
  *		A 64 Character buffer for the string to permutate
  */
+__declspec(target(mic))
 inline void permuteStr(unsigned char *str);
 
 /**
@@ -101,6 +105,7 @@ inline void permuteStr(unsigned char *str);
 * @param str
 *		A 64 Character buffer for the string to randomize
 */
+__declspec(target(mic))
 inline void randomStr(unsigned char *str);
 
 /**
@@ -112,6 +117,7 @@ inline void randomStr(unsigned char *str);
 * @return Returns a pointer to the
 *		first element of the buffer
 */
+__declspec(target(mic))
 inline void* allocEmptyBuffer(size_t len);
 
 /**
@@ -120,6 +126,7 @@ inline void* allocEmptyBuffer(size_t len);
 * @param state
 *		An integer reference which stores the state of the RNG
 */
+__declspec(target(mic))
 inline int seedThreadSafeRNG(int id) {
 	return 25234 + 17 * (id * time(NULL));
 }
@@ -131,6 +138,7 @@ inline int seedThreadSafeRNG(int id) {
  * @param state
  *		An integer reference which stores the state of the RNG
  */
+__declspec(target(mic))
 inline int threadSafeRNG(int &state) {
 	// & 0x7fffffff is equivalent to modulo with RNG_MOD = 2^31
 	return (state = (state * 1103515245 + 12345) & 0x7fffffff);
