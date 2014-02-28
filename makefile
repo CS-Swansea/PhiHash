@@ -2,6 +2,9 @@
 # !!! Remember to use the CXX prefix to reference the "icpc" compiler
 #     instead of "g++"
 #
+# !!! This makefile assumes no special dependencies and will attempt to 
+#     compile all local .cpp files into corresponding .o's and then a 
+#     single binary of the same name as the repository...
 
 # Use Intel C++ Compiler
 CXX=icpc
