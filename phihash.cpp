@@ -32,7 +32,7 @@ int main() {
 
 		bool newHash;
 
-		#pragma offload target(mic:0) out(newHash) inout(minStr : length(HASH_MIC), minHashStr : length(HASH_STR))
+		#pragma offload target(mic:0) out(newHash) inout(minStr : length(HASH_MIC)) inout(minHashStr : length(HASH_STR))
 		{
 			newHash = false;
 

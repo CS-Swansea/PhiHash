@@ -10,6 +10,7 @@
 #include <ctime>
 #include <cmath>
 #include <omp.h>
+#include <offload.h>
 
 #include "sha512.hpp"
 
