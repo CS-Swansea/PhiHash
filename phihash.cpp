@@ -37,7 +37,7 @@ int main() {
 		{
 			newHash = false;
 
-			#pragma omp parallel private(RNG_STATE)
+			#pragma omp parallel num_threads(__THREADS__) private(RNG_STATE)
 			{
 				// Setup RNG
 				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
