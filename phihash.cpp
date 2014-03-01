@@ -103,10 +103,15 @@ int main() {
 
 		// Stop the clock
 		double t2 = (double) (WORK_SIZE * omp_get_max_threads()) / (omp_get_wtime() - t1);
-		std::cout << std::flush << " Cores: " << omp_get_max_threads() << " Hash/s : " << t2 << '\r';
+		std::cout << std::flush << "  Cores : " << omp_get_max_threads() << " Hash/s : " << t2 << '\r';
 
 		if (newHash) {
+
+			int j;
+			for (j = 0; j < HASH_STR && minHashStr[j] == '0'; j++);
+
 			std::cout << std::endl << std::endl << " String : " << minStr << std::endl << std::endl;
+			std::cout << "    0's : " << j << std::endl << std::endl;
 			std::cout << "Minimum : " << minHashStr << std::endl << std::endl;
 		}
 	}
@@ -193,7 +198,8 @@ inline void permuteStr(unsigned char *str) {
 
 	randomStr(str);
 #elif __PERMUTE_SCHEDULE__ == __RND_PERMUTE__
-	str[threadSafeRNG(RNG_STATE) % 64] = 32 + ((unsigned char) (threadSafeRNG(RNG_STATE) % 95));
+	int index = threadSafeRNG(RNG_STATE) % 64;
+	str[index] = 32 + ((char) (threadSafeRNG(RNG_STATE) % 95));
 #else
 	randomStr(str);
 #endif
@@ -224,7 +230,8 @@ inline void randomStr(unsigned char *str) {
 */
 OFFLOAD_DECL
 inline void* allocEmptyBuffer(size_t len) {
-	void* ptr = new char[len];
+	char* ptr = new char[len];
 	//memset(ptr, 0, len);
+	ptr[len - 1] = '\0';
 	return ptr;
 };

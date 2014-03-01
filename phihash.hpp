@@ -31,7 +31,7 @@
  * increase the likelihood of work duplication
  * as threads overlap.
  */
-#define WORK_SIZE 10000
+#define WORK_SIZE 50000
 
 /*
  * String permutation schedules
