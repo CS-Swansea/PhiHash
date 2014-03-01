@@ -140,7 +140,6 @@ static const uint64_t K[80] =
 /*
 * SHA-512 context setup
 */
-OFFLOAD_DECL
 void sha512_starts(sha512_context *ctx, int is384)
 {
 	ctx->total[0] = 0;
@@ -174,7 +173,6 @@ void sha512_starts(sha512_context *ctx, int is384)
 	ctx->is384 = is384;
 }
 
-OFFLOAD_DECL
 void sha512_process(sha512_context *ctx, const unsigned char data[128])
 {
 	int i;
@@ -246,7 +244,6 @@ void sha512_process(sha512_context *ctx, const unsigned char data[128])
 /*
 * SHA-512 process buffer
 */
-OFFLOAD_DECL
 void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
 {
 	size_t fill;
@@ -299,7 +296,6 @@ static const unsigned char sha512_padding[128] =
 /*
 * SHA-512 final digest
 */
-OFFLOAD_DECL
 void sha512_finish(sha512_context *ctx, unsigned char output[64])
 {
 	size_t last, padn;
@@ -336,7 +332,6 @@ void sha512_finish(sha512_context *ctx, unsigned char output[64])
 /*
 * output = SHA-512( input buffer )
 */
-OFFLOAD_DECL
 void sha512_alt(const unsigned char *input, size_t ilen,
 	unsigned char output[64], int is384)
 {
@@ -348,7 +343,6 @@ void sha512_alt(const unsigned char *input, size_t ilen,
 /*
 * output = SHA-512( input buffer )
 */
-OFFLOAD_DECL
 void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen,
 unsigned char output[64], int is384)
 {

@@ -34,7 +34,7 @@ int main() {
 
 		bool newHash;
 
-		//#pragma offload target(mic:0) out(newHash) inout(minStr : length(HASH_MIC)) inout(minHashStr : length(HASH_STR))
+		#pragma offload target(mic:0) out(newHash) inout(minStr : length(HASH_MIC)) inout(minHashStr : length(HASH_STR))
 		{
 			newHash = false;
 
@@ -137,7 +137,6 @@ int main() {
 * @return Returns true if the new hash has a lower 
 *		hexidecimal value than the old one
 */
-OFFLOAD_DECL
 inline bool cmpHash(char *newHash, char *oldHash) {
 	for (int i = 0; i < HASH_LEN; i++) {
 		if (newHash[i] < oldHash[i]) {
@@ -159,7 +158,6 @@ inline bool cmpHash(char *newHash, char *oldHash) {
 * @param hashStr
 *		A 129 Character (128 plus a '\0' byte) result buffer for the string
 */
-OFFLOAD_DECL
 inline void hash2Str(unsigned char *hash, char *hashStr) {
 	for (int i = 0; i < HASH_LEN; i++) {
 		sprintf(&(hashStr[i * 2]), "%02X", hash[i]);
@@ -173,7 +171,6 @@ inline void hash2Str(unsigned char *hash, char *hashStr) {
 * @param str
 *		A 64 Character buffer for the string to permutate
 */
-OFFLOAD_DECL
 inline void permuteStr(unsigned char *str) {
 #if __PERMUTE_SCHEDULE__ == __INC_PERMUTE__
 	int c = 63;
@@ -203,7 +200,6 @@ inline void permuteStr(unsigned char *str) {
 * @param str
 *		A 64 Character buffer for the string to randomize
 */
-OFFLOAD_DECL
 inline void randomStr(unsigned char *str) {
 	for (int i = 0; i < HASH_LEN; i++) {
 		str[i] = 32 + ((unsigned char) (threadSafeRNG(RNG_STATE) % 95));
@@ -219,7 +215,6 @@ inline void randomStr(unsigned char *str) {
 * @return Returns a pointer to the
 *		first element of the buffer
 */
-OFFLOAD_DECL
 inline void* allocEmptyBuffer(size_t len) {
 	char* ptr = new char[len];
 	//memset(ptr, 0, len);
