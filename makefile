@@ -10,7 +10,7 @@
 CXX=icpc
 
 # Compiler and Linker flags
-CXXFLAGS= -O3 -openmp 
+CXXFLAGS= -O3 -openmp -offload-attribute-target=mic
 LXXFLAGS= 
 
 # Inlude and Library paths
