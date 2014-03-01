@@ -9,7 +9,7 @@
 #define PAUSE system("PAUSE");
 #define OFFLOAD_DECL 
 #else
-#include <offload.h>
+#include <offload.h> 
 #define __THREADS__ 31
 #define PAUSE 
 #define OFFLOAD_DECL //__declspec(target(mic))
