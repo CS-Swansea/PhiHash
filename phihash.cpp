@@ -22,7 +22,8 @@ int main() {
 	// Perform an initial random hash so we have something to compare the threads to initially
 	unsigned char *tmpBuffer = (unsigned char*) allocEmptyBuffer(HASH_LEN);
 	randomStr((unsigned char*)minStr);
-	genHash(minStr, tmpBuffer);
+	sha512_context tmpCtx;
+	genHash(&tmpCtx, minStr, tmpBuffer);
 	hash2Str(tmpBuffer, minHashStr);
 	delete [] tmpBuffer;
 
@@ -41,6 +42,7 @@ int main() {
 			{
 				// Setup RNG
 				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
+				sha512_context ctx;
 
 				// A thread min buffers
 				char *minThreadStr = (char*) allocEmptyBuffer(HASH_LEN + 1);
@@ -55,7 +57,7 @@ int main() {
 
 				// Perform initial random hash so we have something to compare off of initially
 				randomStr((unsigned char*) minThreadStr);
-				genHash(minThreadStr, hashBuffer);
+				genHash(&ctx, minThreadStr, hashBuffer);
 				hash2Str(hashBuffer, minThreadHashStr);
 
 				// Copy the random string used to the work buffer
@@ -66,7 +68,7 @@ int main() {
 					// Increment the string or randomize it if it overflows
 					permuteStr((unsigned char*) str);
 
-					genHash(str, hashBuffer);
+					genHash(&ctx, str, hashBuffer);
 					hash2Str(hashBuffer, hashStr);
 
 					// Compare the new hash to the local minima
@@ -124,17 +126,20 @@ int main() {
 };
 
 /**
- * Compute the SHA-512 Hash of a 64 Character String
- *
- * @param input 
- *		A 64 Readable Character ASCII string to be hashed
- *
- * @param hash
- *		A 64 byte result buffer for the hash
- */
+* Compute the SHA-512 Hash of a 64 Character String
+*
+* @param ctx
+*		A pointer to the SHA-512 generator context
+*
+* @param input
+*		A 64 Readable Character ASCII string to be hashed
+*
+* @param hash
+*		A 64 byte result buffer for the hash
+*/
 OFFLOAD_DECL
-inline void genHash(char *input, unsigned char *hash) {
-	sha512((unsigned char *)input, HASH_LEN, hash, 0);
+inline void genHash(sha512_context *ctx, char *input, unsigned char *hash) {
+	sha512(ctx, (unsigned char *)input, HASH_LEN, hash, 0);
 };
 
 /**

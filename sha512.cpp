@@ -337,14 +337,23 @@ void sha512_finish(sha512_context *ctx, unsigned char output[64])
 * output = SHA-512( input buffer )
 */
 OFFLOAD_DECL
-void sha512(const unsigned char *input, size_t ilen,
+void sha512_alt(const unsigned char *input, size_t ilen,
 	unsigned char output[64], int is384)
 {
 	sha512_context ctx;
-
-	sha512_starts(&ctx, is384);
-	sha512_update(&ctx, input, ilen);
-	sha512_finish(&ctx, output);
-
+	sha512(&ctx, input, ilen, output, is384);
 	memset(&ctx, 0, sizeof(sha512_context));
+}
+
+/*
+* output = SHA-512( input buffer )
+*/
+OFFLOAD_DECL
+void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen,
+unsigned char output[64], int is384)
+{
+	memset(ctx, 0, sizeof(sha512_context));
+	sha512_starts(ctx, is384);
+	sha512_update(ctx, input, ilen);
+	sha512_finish(ctx, output);
 }

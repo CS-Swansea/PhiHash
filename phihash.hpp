@@ -43,6 +43,9 @@
 /**
 * Compute the SHA-512 Hash of a 64 Character String
 *
+* @param ctx
+*		A pointer to the SHA-512 generator context
+*
 * @param input
 *		A 64 Readable Character ASCII string to be hashed
 *
@@ -50,7 +53,7 @@
 *		A 64 byte result buffer for the hash
 */
 OFFLOAD_DECL
-inline void genHash(char *input, unsigned char *hash);
+inline void genHash(sha512_context *ctx, char *input, unsigned char *hash);
 
 /**
 * Compare two SHA-512 Hashes

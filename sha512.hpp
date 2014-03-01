@@ -129,7 +129,14 @@ extern "C" {
 	* \param is384    0 = use SHA512, 1 = use SHA384
 	*/
 	OFFLOAD_DECL
-	void sha512(const unsigned char *input, size_t ilen,
+	void sha512_alt(const unsigned char *input, size_t ilen,
+		unsigned char output[64], int is384);
+
+	/*
+	* output = SHA-512( input buffer )
+	*/
+	OFFLOAD_DECL
+	void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen,
 		unsigned char output[64], int is384);
 
 	/* Internal use */
