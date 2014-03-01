@@ -10,7 +10,7 @@
 #define OFFLOAD_DECL 
 #else
 #include <offload.h> 
-#define __THREADS__ 60
+#define __THREADS__ 120
 #define PAUSE 
 #define OFFLOAD_DECL __declspec(target(mic))
 #endif
