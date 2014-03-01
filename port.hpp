@@ -5,12 +5,12 @@
 * closing the console when the program terminates...
 */
 #if defined(_MSC_VER)
-#define __THREADS__ num_threads(7)
+#define __THREADS__ 7
 #define PAUSE system("PAUSE");
 #define OFFLOAD_DECL 
 #else
 #include <offload.h> 
-//#define __THREADS__ num_threads(31)
+#define __THREADS__ 60
 #define PAUSE 
 #define OFFLOAD_DECL //__attribute__ ((target(mic)))
 #endif
