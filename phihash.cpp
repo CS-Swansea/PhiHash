@@ -102,8 +102,8 @@ int main() {
 		}
 
 		// Stop the clock
-		double t2 = (double) (WORK_SIZE * omp_get_max_threads()) / (omp_get_wtime() - t1);
-		std::cout << std::flush << "  Cores : " << omp_get_max_threads() << " Hash/s : " << t2 << '\r';
+		double t2 = (double) (WORK_SIZE * __THREADS__) / (omp_get_wtime() - t1);
+		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << t2 << '\r';
 
 		if (newHash) {
 
@@ -189,7 +189,10 @@ OFFLOAD_DECL
 inline void permuteStr(unsigned char *str) {
 #if __PERMUTE_SCHEDULE__ == __INC_PERMUTE__
 	int c = 63;
-	while (c >= 0 && str[c] >= 126) c--;
+	while (c >= 0 && str[c] >= 126) {
+		str[c] = 32;
+		c--;
+	}
 
 	if (c > -1) {
 		str[c]++;

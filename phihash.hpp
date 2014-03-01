@@ -38,7 +38,7 @@
  */
 #define __RND_PERMUTE__ 1
 #define __INC_PERMUTE__ 2
-#define __PERMUTE_SCHEDULE__ 1
+#define __PERMUTE_SCHEDULE__ 2
 
 /**
 * Compute the SHA-512 Hash of a 64 Character String
