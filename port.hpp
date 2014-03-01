@@ -12,5 +12,5 @@
 #include <offload.h> 
 #define __THREADS__ 60
 #define PAUSE 
-#define OFFLOAD_DECL __attribute__ ((target(mic)))
+#define OFFLOAD_DECL __declspec(target(mic))
 #endif
