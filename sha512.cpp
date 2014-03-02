@@ -137,45 +137,8 @@ static const uint64_t K[80] =
 	UL64(0x5FCB6FAB3AD6FAEC), UL64(0x6C44198C4A475817)
 };
 
-/*
-* SHA-512 context setup
-*/
 OFFLOAD_DECL
-void sha512_starts(sha512_context *ctx, int is384)
-{
-	ctx->total[0] = 0;
-	ctx->total[1] = 0;
-
-	if (is384 == 0)
-	{
-		/* SHA-512 */
-		ctx->state[0] = UL64(0x6A09E667F3BCC908);
-		ctx->state[1] = UL64(0xBB67AE8584CAA73B);
-		ctx->state[2] = UL64(0x3C6EF372FE94F82B);
-		ctx->state[3] = UL64(0xA54FF53A5F1D36F1);
-		ctx->state[4] = UL64(0x510E527FADE682D1);
-		ctx->state[5] = UL64(0x9B05688C2B3E6C1F);
-		ctx->state[6] = UL64(0x1F83D9ABFB41BD6B);
-		ctx->state[7] = UL64(0x5BE0CD19137E2179);
-	}
-	else
-	{
-		/* SHA-384 */
-		ctx->state[0] = UL64(0xCBBB9D5DC1059ED8);
-		ctx->state[1] = UL64(0x629A292A367CD507);
-		ctx->state[2] = UL64(0x9159015A3070DD17);
-		ctx->state[3] = UL64(0x152FECD8F70E5939);
-		ctx->state[4] = UL64(0x67332667FFC00B31);
-		ctx->state[5] = UL64(0x8EB44A8768581511);
-		ctx->state[6] = UL64(0xDB0C2E0D64F98FA7);
-		ctx->state[7] = UL64(0x47B5481DBEFA4FA4);
-	}
-
-	ctx->is384 = is384;
-}
-
-OFFLOAD_DECL
-void sha512_process(sha512_context *ctx, const unsigned char data[128])
+inline void sha512_process(sha512_context *ctx, const unsigned char data[128])
 {
 	int i;
 	uint64_t temp1, temp2, W[80];
@@ -241,13 +204,13 @@ void sha512_process(sha512_context *ctx, const unsigned char data[128])
 	ctx->state[5] += F;
 	ctx->state[6] += G;
 	ctx->state[7] += H;
-}
+};
 
 /*
 * SHA-512 process buffer
 */
 OFFLOAD_DECL
-void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
+inline void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
 {
 	size_t fill;
 	unsigned int left;
@@ -281,7 +244,7 @@ void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
 
 	if (ilen > 0)
 		memcpy((void *) (ctx->buffer + left), input, ilen);
-}
+};
 
 OFFLOAD_DECL
 static const unsigned char sha512_padding[128] =
@@ -297,11 +260,29 @@ static const unsigned char sha512_padding[128] =
 };
 
 /*
-* SHA-512 final digest
+* output = SHA-512( input buffer )
 */
 OFFLOAD_DECL
-void sha512_finish(sha512_context *ctx, unsigned char output[64])
+void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen, unsigned char output[64])
 {
+	/* START */
+	ctx->total[0] = 0;
+	ctx->total[1] = 0;
+
+	/* SHA-512 */
+	ctx->state[0] = UL64(0x6A09E667F3BCC908);
+	ctx->state[1] = UL64(0xBB67AE8584CAA73B);
+	ctx->state[2] = UL64(0x3C6EF372FE94F82B);
+	ctx->state[3] = UL64(0xA54FF53A5F1D36F1);
+	ctx->state[4] = UL64(0x510E527FADE682D1);
+	ctx->state[5] = UL64(0x9B05688C2B3E6C1F);
+	ctx->state[6] = UL64(0x1F83D9ABFB41BD6B);
+	ctx->state[7] = UL64(0x5BE0CD19137E2179);
+	/* END START */
+
+	sha512_update(ctx, input, ilen);
+	
+	/* FINISH */
 	size_t last, padn;
 	uint64_t high, low;
 	unsigned char msglen[16];
@@ -325,35 +306,8 @@ void sha512_finish(sha512_context *ctx, unsigned char output[64])
 	PUT_UINT64_BE(ctx->state[3], output, 24);
 	PUT_UINT64_BE(ctx->state[4], output, 32);
 	PUT_UINT64_BE(ctx->state[5], output, 40);
-
-	if (ctx->is384 == 0)
-	{
-		PUT_UINT64_BE(ctx->state[6], output, 48);
-		PUT_UINT64_BE(ctx->state[7], output, 56);
-	}
-}
-
-/*
-* output = SHA-512( input buffer )
-*/
-OFFLOAD_DECL
-void sha512_alt(const unsigned char *input, size_t ilen,
-	unsigned char output[64], int is384)
-{
-	sha512_context ctx;
-	sha512(&ctx, input, ilen, output, is384);
-	memset(&ctx, 0, sizeof(sha512_context));
-}
-
-/*
-* output = SHA-512( input buffer )
-*/
-OFFLOAD_DECL
-void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen,
-	unsigned char output[64], int is384)
-{
-	memset(ctx, 0, sizeof(sha512_context));
-	sha512_starts(ctx, is384);
-	sha512_update(ctx, input, ilen);
-	sha512_finish(ctx, output);
-}
+	/* SHA-512 */
+	PUT_UINT64_BE(ctx->state[6], output, 48);
+	PUT_UINT64_BE(ctx->state[7], output, 56);
+	/* END FINISH */
+};

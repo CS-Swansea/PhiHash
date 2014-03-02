@@ -70,77 +70,34 @@ typedef unsigned __int64 uint64_t;
 #define UL64(x) x##ULL
 #endif
 
-extern "C" {
-
-	/**
-	* \brief          SHA-512 context structure
-	*/
-	OFFLOAD_DECL
-	typedef struct
-	{
-		uint64_t total[2];          /*!< number of bytes processed  */
-		uint64_t state[8];          /*!< intermediate digest state  */
-		unsigned char buffer[128];  /*!< data block being processed */
-
-		unsigned char ipad[128];    /*!< HMAC: inner padding        */
-		unsigned char opad[128];    /*!< HMAC: outer padding        */
-		int is384;                  /*!< 0 => SHA-512, else SHA-384 */
-	}
-	sha512_context;
-
-	/**
-	* \brief          SHA-512 context setup
-	*
-	* \param ctx      context to be initialized
-	* \param is384    0 = use SHA512, 1 = use SHA384
-	*/
-	OFFLOAD_DECL
-	void sha512_starts(sha512_context *ctx, int is384);
-
-	/**
-	* \brief          SHA-512 process buffer
-	*
-	* \param ctx      SHA-512 context
-	* \param input    buffer holding the  data
-	* \param ilen     length of the input data
-	*/
-	OFFLOAD_DECL
-	void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen);
-
-	/**
-	* \brief          SHA-512 final digest
-	*
-	* \param ctx      SHA-512 context
-	* \param output   SHA-384/512 checksum result
-	*/
-	OFFLOAD_DECL
-	void sha512_finish(sha512_context *ctx, unsigned char output[64]);
-
+/**
+* \brief          SHA-512 context structure
+*/
+OFFLOAD_DECL
+typedef struct
+{
+	uint64_t total[2];          /*!< number of bytes processed  */
+	uint64_t state[8];          /*!< intermediate digest state  */
+	unsigned char buffer[128];  /*!< data block being processed */
 }
+sha512_context;
 
-extern "C" {
+/* Internal use */
+OFFLOAD_DECL
+inline void sha512_process(sha512_context *ctx, const unsigned char data[128]);
 
-	/**
-	* \brief          Output = SHA-512( input buffer )
-	*
-	* \param input    buffer holding the  data
-	* \param ilen     length of the input data
-	* \param output   SHA-384/512 checksum result
-	* \param is384    0 = use SHA512, 1 = use SHA384
-	*/
-	OFFLOAD_DECL
-	void sha512_alt(const unsigned char *input, size_t ilen,
-		unsigned char output[64], int is384);
+/**
+* \brief          SHA-512 process buffer
+*
+* \param ctx      SHA-512 context
+* \param input    buffer holding the  data
+* \param ilen     length of the input data
+*/
+OFFLOAD_DECL
+inline void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen);
 
-	/*
-	* output = SHA-512( input buffer )
-	*/
-	OFFLOAD_DECL
-	void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen,
-		unsigned char output[64], int is384);
-
-	/* Internal use */
-	OFFLOAD_DECL
-	void sha512_process(sha512_context *ctx, const unsigned char data[128]);
-}
-
+/*
+* output = SHA-512( input buffer )
+*/
+OFFLOAD_DECL
+void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen, unsigned char output[64]);
