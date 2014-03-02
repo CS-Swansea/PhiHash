@@ -139,14 +139,13 @@ int main() {
 */
 OFFLOAD_DECL
 inline bool cmpHash(char *newHash, char *oldHash) {
-	for (int i = 0; i < HASH_LEN; i++) {
-		if (newHash[i] < oldHash[i]) {
-			return true;
-		}
-		else if (newHash[i] > oldHash[i]) {
-			return false;
-		}
+	int i = 0;
+	while (i < HASH_LEN && newHash[i] == oldHash[i]) i++;
+	
+	if (newHash[i] < oldHash[i]) {
+		return true;
 	}
+	
 	return false;
 };
 
