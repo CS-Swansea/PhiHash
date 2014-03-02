@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <assert.h>
 #include <ctime>
 #include <cmath>
 #include <omp.h>
