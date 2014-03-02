@@ -1,10 +1,3 @@
-/*
- * Force the compiler to shutup about our using 'sprintf'
- * We've hard coded the buffer sizes and there's no user input
- * so nothing should be able to go wrong... (famous last words)
- */
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -102,18 +95,6 @@ OFFLOAD_DECL
 inline void randomStr(unsigned char *str);
 
 /**
-* Create an empty buffer
-*
-* @param len
-*		The length of the buffer
-*
-* @return Returns a pointer to the
-*		first element of the buffer
-*/
-OFFLOAD_DECL
-inline void* allocEmptyBuffer(size_t len);
-
-/**
 * Seeds the <state> of our threadsafe RNG
 *
 * @param state
@@ -136,3 +117,9 @@ inline int threadSafeRNG(int &state) {
 	// & 0x7fffffff is equivalent to modulo with RNG_MOD = 2^31
 	return (state = (state * 1103515245 + 12345) & 0x7fffffff);
 }
+
+/**
+* Run a series of checks on the SHA-512 function to make sure it 
+* still produces correct results
+*/
+void TEST_sha512();
