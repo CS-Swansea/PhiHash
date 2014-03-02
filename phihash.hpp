@@ -31,7 +31,7 @@
  * increase the likelihood of work duplication
  * as threads overlap.
  */
-#define WORK_SIZE 50000
+#define WORK_SIZE 1000000
 
 /*
  * String permutation schedules
@@ -67,7 +67,7 @@
 *		hexidecimal value than the old one
 */
 OFFLOAD_DECL
-inline bool cmpHash(char *newHash, char *oldHash);
+inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash);
 
 /**
 * Convert the SHA-512 Hash to a 128 Character Hexidecimal String

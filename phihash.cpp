@@ -17,15 +17,13 @@ int main() {
 
 	// Buffers to store the global minimum (string, hash) tuple
 	char *minStr = (char*)allocEmptyBuffer(HASH_LEN + 1); // Don't forget the +1 for the '\0' byte
+	unsigned char *minHash = new unsigned char[HASH_LEN];
 	char *minHashStr = (char*) allocEmptyBuffer(HASH_STR);
 
 	// Perform an initial random hash so we have something to compare the threads to initially
-	unsigned char *tmpBuffer = (unsigned char*) allocEmptyBuffer(HASH_LEN);
 	randomStr((unsigned char*)minStr);
 	sha512_context tmpCtx;
-	genHash(&tmpCtx, minStr, tmpBuffer);
-	hash2Str(tmpBuffer, minHashStr);
-	delete [] tmpBuffer;
+	genHash(&tmpCtx, minStr, minHash);
 
 	uint64_t round = 0;
 	while (true) {
@@ -47,35 +45,29 @@ int main() {
 
 				// A thread min buffers
 				char *minThreadStr = (char*) allocEmptyBuffer(HASH_LEN + 1);
-				char *minThreadHashStr = (char*) allocEmptyBuffer(HASH_STR);
+				unsigned char *minThreadHash = new unsigned char[HASH_LEN];
 
 				// Thread compute buffers
 				char *str = (char*) allocEmptyBuffer(HASH_LEN + 1);
-				char *hashStr = (char*) allocEmptyBuffer(HASH_STR);
-
-				// Intermediate buffer for hashing
-				unsigned char *hashBuffer = (unsigned char*) allocEmptyBuffer(HASH_LEN);
+				unsigned char *hashBuffer = new unsigned char[HASH_LEN];
 
 				// Perform initial random hash so we have something to compare off of initially
 				randomStr((unsigned char*) minThreadStr);
-				genHash(&ctx, minThreadStr, hashBuffer);
-				hash2Str(hashBuffer, minThreadHashStr);
-
+				genHash(&ctx, minThreadStr, minThreadHash);
+				
 				// Copy the random string used to the work buffer
 				memcpy(str, minThreadStr, HASH_LEN);
 
 				// Compute <WORK_SIZE> hashes then compare them to the host global
 				for (int i = 0; i < WORK_SIZE; i++) {
-					// Increment the string or randomize it if it overflows
+					
 					permuteStr((unsigned char*) str);
-
 					genHash(&ctx, str, hashBuffer);
-					hash2Str(hashBuffer, hashStr);
-
+					
 					// Compare the new hash to the local minima
-					if (cmpHash(hashStr, minThreadHashStr)) {
+					if (cmpHash(hashBuffer, minThreadHash)) {
 						// Blit the new string and hash to the local buffers
-						memcpy(minThreadHashStr, hashStr, HASH_STR);
+						memcpy(minThreadHash, hashBuffer, HASH_LEN);
 						memcpy(minThreadStr, str, HASH_LEN + 1);
 					}
 				}
@@ -83,9 +75,9 @@ int main() {
 				#pragma omp critical
 				{
 					// Compare the new hash to the local minima
-					if (cmpHash(minThreadHashStr, minHashStr)) {
+					if (cmpHash(minThreadHash, minHash)) {
 						// Blit the new string and hash to the local buffers
-						memcpy(minHashStr, minThreadHashStr, HASH_STR);
+						memcpy(minHash, minThreadHash, HASH_LEN);
 						memcpy(minStr, minThreadStr, HASH_LEN + 1);
 
 						newHash = true;
@@ -94,12 +86,10 @@ int main() {
 
 				// Cleanup thread buffers
 				delete [] str;
-				delete [] hashStr;
+				delete [] hashBuffer;
 
 				delete [] minThreadStr;
-				delete [] minThreadHashStr;
-
-				delete [] hashBuffer;
+				delete [] minThreadHash;
 			}
 
 		}
@@ -109,6 +99,8 @@ int main() {
 		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << t2 << '\r';
 
 		if (newHash) {
+
+			hash2Str(minHash, minHashStr);
 
 			int j;
 			for (j = 0; j < HASH_STR && minHashStr[j] == '0'; j++);
@@ -122,6 +114,7 @@ int main() {
 	}
 
 	delete [] minStr;
+	delete [] minHash;
 	delete [] minHashStr;
 
 	PAUSE
@@ -141,14 +134,26 @@ int main() {
 *		hexidecimal value than the old one
 */
 OFFLOAD_DECL
-inline bool cmpHash(char *newHash, char *oldHash) {
+inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash) {
 	int i = 0;
 	while (i < HASH_LEN && newHash[i] == oldHash[i]) i++;
 	
-	if (newHash[i] < oldHash[i]) {
+	unsigned char a0 = (newHash[i] >> 4);
+	unsigned char b0 = (oldHash[i] >> 4);
+	if (a0 < b0) {
 		return true;
 	}
-	
+	else if (a0 > b0) 
+	{
+		return false;
+	}
+
+	unsigned char a1 = (newHash[i] & 0x0F);
+	unsigned char b1 = (oldHash[i] & 0x0F);
+	if (a1 < b1) {
+		return true;
+	}
+		
 	return false;
 };
 
