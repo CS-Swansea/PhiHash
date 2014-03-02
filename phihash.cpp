@@ -68,7 +68,7 @@ int main() {
 					if (cmpHash(hashBuffer, minThreadHash)) {
 						// Blit the new string and hash to the local buffers
 						memcpy(minThreadHash, hashBuffer, HASH_LEN);
-						memcpy(minThreadStr, str, HASH_LEN + 1);
+						memcpy(minThreadStr, str, HASH_LEN);
 					}
 				}
 
@@ -78,7 +78,7 @@ int main() {
 					if (cmpHash(minThreadHash, minHash)) {
 						// Blit the new string and hash to the local buffers
 						memcpy(minHash, minThreadHash, HASH_LEN);
-						memcpy(minStr, minThreadStr, HASH_LEN + 1);
+						memcpy(minStr, minThreadStr, HASH_LEN);
 
 						newHash = true;
 					}
@@ -138,19 +138,19 @@ inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash) {
 	int i = 0;
 	while (i < HASH_LEN && newHash[i] == oldHash[i]) i++;
 	
-	unsigned char a0 = (newHash[i] >> 4);
-	unsigned char b0 = (oldHash[i] >> 4);
-	if (a0 < b0) {
+	unsigned char a = (newHash[i] >> 4);
+	unsigned char b = (oldHash[i] >> 4);
+	if (a < b) {
 		return true;
 	}
-	else if (a0 > b0) 
+	else if (a > b) 
 	{
 		return false;
 	}
 
-	unsigned char a1 = (newHash[i] & 0x0F);
-	unsigned char b1 = (oldHash[i] & 0x0F);
-	if (a1 < b1) {
+	a = (newHash[i] & 0x0F);
+	b = (oldHash[i] & 0x0F);
+	if (a < b) {
 		return true;
 	}
 		
@@ -239,7 +239,6 @@ inline void randomStr(unsigned char *str) {
 OFFLOAD_DECL
 inline void* allocEmptyBuffer(size_t len) {
 	char* ptr = new char[len];
-	//memset(ptr, 0, len);
 	ptr[len - 1] = '\0';
 	return ptr;
 };
