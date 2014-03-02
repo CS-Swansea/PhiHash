@@ -163,7 +163,7 @@ inline bool cmpHash(char *newHash, char *oldHash) {
 */
 OFFLOAD_DECL
 inline void hash2Str(unsigned char *hash, char *hashStr) {
-	const char hexIndex[17] = "0123456789ABCDEF";
+	const char hexIndex[17] = "0123456789ABCDEF"; 
 
 	int nNibble, i, j;
 	for (i = 0; i < HASH_LEN; i++)
