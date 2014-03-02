@@ -5,6 +5,8 @@
 * closing the console when the program terminates...
 */
 #if defined(_MSC_VER)
+#include <assert.h>
+#define __RUN_TESTS__
 #define __THREADS__ 7
 #define PAUSE system("PAUSE");
 #define OFFLOAD_DECL 
