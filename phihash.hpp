@@ -52,7 +52,7 @@
 * @param hash
 *		A 64 byte result buffer for the hash
 */
-#define genHash(ctx, input, hash) sha512(ctx, (unsigned char *)input, HASH_LEN, hash,0)
+#define genHash(ctx, input, hash) sha512(ctx, (unsigned char *)input, HASH_LEN, hash)
 
 /**
 * Compare two SHA-512 Hashes

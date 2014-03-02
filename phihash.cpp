@@ -27,6 +27,7 @@ int main() {
 	hash2Str(tmpBuffer, minHashStr);
 	delete [] tmpBuffer;
 
+	uint64_t round = 0;
 	while (true) {
 
 		// Start the clock
@@ -38,10 +39,10 @@ int main() {
 		{
 			newHash = false;
 
-			#pragma omp parallel num_threads(__THREADS__) private(RNG_STATE)
+			#pragma omp parallel num_threads(__THREADS__) private(RNG_STATE) shared(round)
 			{
 				// Setup RNG
-				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
+				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num() + (__THREADS__ * round));
 				sha512_context ctx;
 
 				// A thread min buffers
@@ -116,6 +117,8 @@ int main() {
 			std::cout << "    0's : " << j << std::endl << std::endl;
 			std::cout << "Minimum : " << minHashStr << std::endl << std::endl;
 		}
+
+		round++;
 	}
 
 	delete [] minStr;
