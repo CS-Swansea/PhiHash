@@ -61,6 +61,7 @@
 #include <cstdio>
 #include <cstring>
 #include "port.hpp"
+#include "fast_func.hpp"
 
 #if defined(_MSC_VER) || defined(__WATCOMC__)
 #define UL64(x) x##ui64
@@ -94,10 +95,10 @@ inline void sha512_process(sha512_context *ctx, const unsigned char data[128]);
 * \param ilen     length of the input data
 */
 OFFLOAD_DECL
-inline void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen);
+inline void sha512_update(sha512_context *ctx, const unsigned char *input, int ilen);
 
 /*
 * output = SHA-512( input buffer )
 */
 OFFLOAD_DECL
-void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen, unsigned char output[64]);
+void sha512(sha512_context *ctx, const unsigned char *input, int ilen, unsigned char output[64]);

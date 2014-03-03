@@ -210,9 +210,9 @@ inline void sha512_process(sha512_context *ctx, const unsigned char data[128])
 * SHA-512 process buffer
 */
 OFFLOAD_DECL
-inline void sha512_update(sha512_context *ctx, const unsigned char *input, size_t ilen)
+inline void sha512_update(sha512_context *ctx, const unsigned char *input, int ilen)
 {
-	size_t fill;
+	int fill;
 	unsigned int left;
 
 	if (ilen <= 0)
@@ -228,7 +228,7 @@ inline void sha512_update(sha512_context *ctx, const unsigned char *input, size_
 
 	if (left && ilen >= fill)
 	{
-		memcpy((void *) (ctx->buffer + left), input, fill);
+		A_memcpy_n((void *) (ctx->buffer + left), input, fill);
 		sha512_process(ctx, ctx->buffer);
 		input += fill;
 		ilen -= fill;
@@ -243,7 +243,7 @@ inline void sha512_update(sha512_context *ctx, const unsigned char *input, size_
 	}
 
 	if (ilen > 0)
-		memcpy((void *) (ctx->buffer + left), input, ilen);
+		A_memcpy_n((void *) (ctx->buffer + left), input, ilen);
 };
 
 OFFLOAD_DECL
@@ -263,7 +263,7 @@ static const unsigned char sha512_padding[128] =
 * output = SHA-512( input buffer )
 */
 OFFLOAD_DECL
-void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen, unsigned char output[64])
+void sha512(sha512_context *ctx, const unsigned char *input, int ilen, unsigned char output[64])
 {
 	/* START */
 	ctx->total[0] = 0;
@@ -283,7 +283,7 @@ void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen, unsign
 	sha512_update(ctx, input, ilen);
 	
 	/* FINISH */
-	size_t last, padn;
+	int last, padn;
 	uint64_t high, low;
 	unsigned char msglen[16];
 
@@ -294,7 +294,7 @@ void sha512(sha512_context *ctx, const unsigned char *input, size_t ilen, unsign
 	PUT_UINT64_BE(high, msglen, 0);
 	PUT_UINT64_BE(low, msglen, 8);
 
-	last = (size_t) (ctx->total[0] & 0x7F);
+	last = (int) (ctx->total[0] & 0x7F);
 	padn = (last < 112) ? (112 - last) : (240 - last);
 
 	sha512_update(ctx, sha512_padding, padn);
