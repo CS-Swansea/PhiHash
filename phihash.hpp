@@ -13,12 +13,11 @@
  * Definitions for the length of a hash buffer and 
  * a corresponding string buffer...
  */
-#define HASH_MIC 65
 #define HASH_LEN 64
 #define HASH_STR 129
 
 /*
- * How many hashes to compute perthread before 
+ * How many hashes to compute per thread before 
  * combining results...
  *
  * A higher value will reduce bottlenecks, but 
@@ -30,9 +29,17 @@
 /*
  * String permutation schedules
  */
-#define __RND_PERMUTE__ 1
-#define __INC_PERMUTE__ 2
-#define __PERMUTE_SCHEDULE__ 1
+#define __INC_PERMUTE__			1 /* FASTEST */
+#define __RND_PERMUTE__			2 /* SECOND FASTEST */
+#define __RND_LOOKUP_PERMUTE__	3 /* SLIGHTLY SLOWER THAN __RND_PERMUTE__ */
+								  /* PURE RANDOM IS SLOWEST */
+
+#define __PERMUTE_SCHEDULE__	1
+
+/*
+* Valid character for string permutation
+*/
+#define PRINTABLE_CHARS 95
 
 /**
 * Compute the SHA-512 Hash of a 64 Character String

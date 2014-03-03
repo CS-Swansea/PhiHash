@@ -34,6 +34,7 @@ int main() {
 	genHash(&tmpCtx, minStr, minHash);
 
 	uint64_t round = 0;
+	double tA = 0;
 	while (true) {
 
 		// Start the clock
@@ -97,7 +98,10 @@ int main() {
 
 		// Stop the clock
 		double t2 = (double) (WORK_SIZE * __THREADS__) / (omp_get_wtime() - t1);
-		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << t2 << '\r';
+
+		tA = ((tA * (double) round) + t2) / (double)(round + 1);
+
+		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << t2 << " avg: " << tA << '\r';
 
 		if (newHash) {
 
@@ -205,6 +209,10 @@ inline void permuteStr(unsigned char *str) {
 #elif __PERMUTE_SCHEDULE__ == __RND_PERMUTE__
 	int index = threadSafeRNG(RNG_STATE) % 64;
 	str[index] = 32 + ((char) (threadSafeRNG(RNG_STATE) % 95));
+#elif __PERMUTE_SCHEDULE__ == __RND_LOOKUP_PERMUTE__
+	const char rndChars[PRINTABLE_CHARS+1] = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	int index = threadSafeRNG(RNG_STATE) % 64;
+	str[index] = rndChars[(threadSafeRNG(RNG_STATE) % PRINTABLE_CHARS)];
 #else
 	randomStr(str);
 #endif
