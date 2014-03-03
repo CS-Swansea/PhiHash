@@ -4,6 +4,8 @@
 
 #define I32B __m256i
 #define STORE_I32B(ptrD, ptrS) _mm256_store_si256(ptrD, *ptrS)
+#define I16B __m128i
+#define STORE_I16B(ptrD, ptrS) _mm_store_si128(ptrD, *ptrS)
 
 /**
  * Copies the content of one 32 byte aligned 
@@ -23,3 +25,5 @@
 									A_memcpy_64_bufferD++;									\
 									STORE_I32B(A_memcpy_64_bufferD, A_memcpy_64_bufferS);	\
 								}
+
+void A_memcpy_n(void *dest, const unsigned char *src, int len);
