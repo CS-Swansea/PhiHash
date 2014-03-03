@@ -1,17 +1,28 @@
 #pragma once
 
-/*
-* Simple PAUSE macro to stop Visual Studio from
-* closing the console when the program terminates...
-*/
+#define ALIGN16 __declspec(align(32)) 
+
 #if defined(_MSC_VER)
+
 #define __RUN_TESTS__
+
 #define __THREADS__ 7
+#define OFFLOAD_DECL
+
+#include <malloc.h>
+#define allocAligned(ptr, size) ptr = _aligned_malloc(size, 32);
+
 #define PAUSE system("PAUSE");
-#define OFFLOAD_DECL 
+
 #else
+
 #include <offload.h> 
+
 #define __THREADS__ 31
-#define PAUSE 
 #define OFFLOAD_DECL //__declspec(target(mic))
+
+#define allocAligned(ptr, size) posix_memalign(&ptr, 32, size);
+
+#define PAUSE 
+
 #endif
