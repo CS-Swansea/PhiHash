@@ -101,7 +101,7 @@ int main() {
 
 		tA = ((tA * (double) round) + t2) / (double)(round + 1);
 
-		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << t2 << " avg: " << tA << '\r';
+		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << (uint64_t) t2 << " avg: " << (uint64_t) tA << '\r';
 
 		if (newHash) {
 
