@@ -24,9 +24,9 @@ int main() {
 	RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
 
 	// Buffers to store the global minimum (string, hash) tuple
-	char minStr[HASH_LEN + 1]; minStr[HASH_LEN] = '\0';
-	unsigned char minHash[HASH_LEN];
-	char minHashStr[HASH_STR]; minHashStr[HASH_STR - 1] = '\0';
+	ALIGN16 char minStr[HASH_LEN + 1]; minStr[HASH_LEN] = '\0';
+	ALIGN16 unsigned char minHash[HASH_LEN];
+	ALIGN16 char minHashStr[HASH_STR]; minHashStr[HASH_STR - 1] = '\0';
 
 	// Perform an initial random hash so we have something to compare the threads to initially
 	randomStr((unsigned char*)minStr);
@@ -53,19 +53,19 @@ int main() {
 				sha512_context ctx;
 
 				// A thread min buffers
-				char minThreadStr[HASH_LEN + 1]; minThreadStr[HASH_LEN] = '\0';
-				unsigned char minThreadHash[HASH_LEN];
+				ALIGN16 char minThreadStr[HASH_LEN + 1]; minThreadStr[HASH_LEN] = '\0';
+				ALIGN16 unsigned char minThreadHash[HASH_LEN];
 
 				// Thread compute buffers
-				char str[HASH_LEN + 1]; str[HASH_LEN] = '\0';
-				unsigned char hashBuffer[HASH_LEN];
+				ALIGN16 char str[HASH_LEN + 1]; str[HASH_LEN] = '\0';
+				ALIGN16 unsigned char hashBuffer[HASH_LEN];
 
 				// Perform initial random hash so we have something to compare off of initially
 				randomStr((unsigned char*) minThreadStr);
 				genHash(&ctx, minThreadStr, minThreadHash);
 				
 				// Copy the random string used to the work buffer
-				memcpy(str, minThreadStr, HASH_LEN);
+				A_memcpy_64(str, minThreadStr);
 
 				// Compute <WORK_SIZE> hashes then compare them to the host global
 				for (int i = 0; i < WORK_SIZE; i++) {
@@ -76,8 +76,8 @@ int main() {
 					// Compare the new hash to the local minima
 					if (cmpHash(hashBuffer, minThreadHash)) {
 						// Blit the new string and hash to the local buffers
-						memcpy(minThreadHash, hashBuffer, HASH_LEN);
-						memcpy(minThreadStr, str, HASH_LEN);
+						A_memcpy_64((char*) minThreadHash, (char*) hashBuffer);
+						A_memcpy_64(minThreadStr, str);
 					}
 				}
 
@@ -86,8 +86,8 @@ int main() {
 					// Compare the new hash to the local minima
 					if (cmpHash(minThreadHash, minHash)) {
 						// Blit the new string and hash to the local buffers
-						memcpy(minHash, minThreadHash, HASH_LEN);
-						memcpy(minStr, minThreadStr, HASH_LEN);
+						A_memcpy_64((char*) minHash, (char*) minThreadHash);
+						A_memcpy_64(minStr, minThreadStr);
 
 						newHash = true;
 					}
@@ -180,7 +180,6 @@ inline void hash2Str(unsigned char *hash, char *hashStr) {
 
 		nNibble = hash[i] & 0x0F;
 		hashStr[j + 1] = hexIndex[nNibble];
-
 	}
 };
 
