@@ -7,6 +7,8 @@
 
 #include "port.hpp"
 
+#include "fast_func.hpp"
+
 #include "sha512.hpp"
 
 /*
