@@ -20,7 +20,7 @@ int main() {
 #endif
 
 	// Dummy offload to get all cards ready...
-	#pragma offload_transfer target(mic)
+	//#pragma offload_transfer target(mic)
 
 	// Setup RNG
 	RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
@@ -44,7 +44,7 @@ int main() {
 
 		bool newHash;
 
-		#pragma offload target(mic:0) out(newHash) inout(minStr[0:HASH_LEN] : ALLOC) inout(minHashStr[0:HASH_STR] : ALLOC)
+		//#pragma offload target(mic:0) out(newHash) inout(minStr[0:HASH_LEN] : ALLOC) inout(minHashStr[0:HASH_STR] : ALLOC)
 		{
 			newHash = false;
 
