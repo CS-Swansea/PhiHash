@@ -112,7 +112,7 @@ inline void randomStr(unsigned char *str);
 */
 OFFLOAD_DECL
 inline int seedThreadSafeRNG(int id) {
-	return 25234 + 17 * (id * time(NULL));
+	return 25234 + 17 * (id * (int)time(NULL));
 }
 
 /**
