@@ -28,7 +28,6 @@ all: core
 
 core: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(BINF) $(OBJS) $(LXXFLAGS) $(LIBS)
-	rm -rf *o
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) -c $<
