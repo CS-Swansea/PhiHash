@@ -15,6 +15,7 @@
 * @param len
 *		The number of bytes to copy
 */
+OFFLOAD_DECL
 void A_memcpy_n(void *dest, const unsigned char *src, int len) {
 
 	I32B *A_memcpy_32_bufferS = (I32B*) (src);
