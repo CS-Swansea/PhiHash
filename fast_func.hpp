@@ -1,12 +1,14 @@
 #pragma once
 
-#include <immintrin.h>
 #include "port.hpp"
+
+#if !defined(__USE_OFFLOAD__)
+
+#include <immintrin.h>
 
 #define I16B __m128i
 #define STORE_I16B(ptrD, ptrS) _mm_store_si128(ptrD, *ptrS)
 
-#if !defined(__USE_OFFLOAD__)
 #if (defined(__AVX__) || !defined(_MSC_VER))
 
 #define I32B __m256i
