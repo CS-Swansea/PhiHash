@@ -29,12 +29,25 @@
 									STORE_I32B(A_memcpy_32_bufferD, A_memcpy_32_bufferS);		\
 								}
 
+/**
+* Copies the content of one 32 byte aligned
+* byte buffer of length n into another using AVX
+*
+* @param dest
+*		A pointer to the destination buffer
+*
+* @param src
+*		A pointer to the source buffer
+*
+* @param len
+*		The number of bytes to copy
+*/
 void A_memcpy_n(void *dest, const unsigned char *src, int len);
 
 #else
 
 /**
-* Copies the content of one 32 byte aligned
+* Copies the content of one 16 byte aligned
 * 64 byte buffer into another
 *
 * @param dest
@@ -58,6 +71,18 @@ void A_memcpy_n(void *dest, const unsigned char *src, int len);
 									STORE_I16B(A_memcpy_16_bufferD, A_memcpy_16_bufferS);		\
 								}
 
+/**
+* Fallback for systems not equipt with AVX instructions
+*
+* @param dest
+*		A pointer to the destination buffer
+*
+* @param src
+*		A pointer to the source buffer
+*
+* @param len
+*		The number of bytes to copy
+*/
 #define A_memcpy_n(dest,src,n) memcpy(dest,src,n)
 
 #endif
