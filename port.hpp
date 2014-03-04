@@ -21,7 +21,7 @@
 #else
 
 
-#define __USE_OFFLOAD__ 1
+//#define __USE_OFFLOAD__ 1
 #include <offload.h> 
 
 #define __THREADS__ 32
