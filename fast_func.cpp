@@ -1,5 +1,7 @@
 #include "fast_func.hpp"
 
+#if !defined(__USE_OFFLOAD__)
+
 #if defined(__AVX__) || !defined(_MSC_VER)
 
 /**
@@ -47,5 +49,7 @@ void A_memcpy_n(void *dest, const unsigned char *src, int len) {
 	}
 
 };
+
+#endif
 
 #endif
