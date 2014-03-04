@@ -6,7 +6,7 @@
 #define I16B __m128i
 #define STORE_I16B(ptrD, ptrS) _mm_store_si128(ptrD, *ptrS)
 
-#if defined(__AVX__) || !defined(_MSC_VER)
+#if false //defined(__AVX__) || !defined(_MSC_VER)
 
 #define I32B __m256i
 #define STORE_I32B(ptrD, ptrS) _mm256_store_si256(ptrD, *ptrS)
