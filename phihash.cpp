@@ -235,7 +235,7 @@ inline void randomStr(unsigned char *str) {
 };
 
 void TEST_sha512() {
-
+#ifdef __RUN_TESTS__
 	/* 
 	 * Hard coded test cases for the SHA-512 function using 64 character 
 	 * input strings and 128 character expected outputs...
@@ -271,4 +271,5 @@ void TEST_sha512() {
 	}
 
 	std::cout << "ALL TESTS PASSED!" << std::endl << std::endl;
+#endif
 };
