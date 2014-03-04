@@ -1,9 +1,9 @@
 #pragma once
 
 #if defined(__AVX__) || !defined(_MSC_VER)
-#define ALIGN16 __declspec(align(32)) 
+#define __ALIGN__ __declspec(align(32)) 
 #else
-#define ALIGN16 __declspec(align(16)) 
+#define __ALIGN__ __declspec(align(16)) 
 #endif
 
 #if defined(_MSC_VER)
