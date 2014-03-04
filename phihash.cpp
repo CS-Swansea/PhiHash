@@ -4,8 +4,7 @@
  * A local copy of this variable 
  * name will exist in each thread... 
  */
-OFFLOAD_DECL
-int RNG_STATE;
+OFFLOAD_DECL int RNG_STATE;
 
 /**
  * Program entry point 
@@ -137,8 +136,7 @@ int main() {
 * @return Returns true if the new hash has a lower 
 *		hexidecimal value than the old one
 */
-OFFLOAD_DECL
-inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash) {
+OFFLOAD_DECL inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash) {
 	int i = 0;
 	while (i < HASH_LEN && newHash[i] == oldHash[i]) i++;
 	
@@ -170,8 +168,7 @@ inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash) {
 * @param hashStr
 *		A 129 Character (128 plus a '\0' byte) result buffer for the string
 */
-OFFLOAD_DECL
-inline void hash2Str(unsigned char *hash, char *hashStr) {
+OFFLOAD_DECL inline void hash2Str(unsigned char *hash, char *hashStr) {
 	const char hexIndex[17] = "0123456789ABCDEF"; 
 
 	int nNibble, i, j;
@@ -193,8 +190,7 @@ inline void hash2Str(unsigned char *hash, char *hashStr) {
 * @param str
 *		A 64 Character buffer for the string to permutate
 */
-OFFLOAD_DECL
-inline void permuteStr(unsigned char *str) {
+OFFLOAD_DECL inline void permuteStr(unsigned char *str) {
 #if __PERMUTE_SCHEDULE__ == __INC_PERMUTE__
 	int c = 63;
 	while (c >= 0 && str[c] >= 126) {
@@ -227,8 +223,7 @@ inline void permuteStr(unsigned char *str) {
 * @param str
 *		A 64 Character buffer for the string to randomize
 */
-OFFLOAD_DECL
-inline void randomStr(unsigned char *str) {
+OFFLOAD_DECL inline void randomStr(unsigned char *str) {
 	for (int i = 0; i < HASH_LEN; i++) {
 		str[i] = 32 + ((unsigned char) (threadSafeRNG(RNG_STATE) % 95));
 	}

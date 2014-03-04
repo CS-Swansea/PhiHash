@@ -92,8 +92,7 @@
 /*
 * Round constants
 */
-OFFLOAD_DECL
-static const uint64_t K[80] =
+OFFLOAD_DECL static const uint64_t K[80] =
 {
 	UL64(0x428A2F98D728AE22), UL64(0x7137449123EF65CD),
 	UL64(0xB5C0FBCFEC4D3B2F), UL64(0xE9B5DBA58189DBBC),
@@ -137,8 +136,7 @@ static const uint64_t K[80] =
 	UL64(0x5FCB6FAB3AD6FAEC), UL64(0x6C44198C4A475817)
 };
 
-OFFLOAD_DECL
-inline void sha512_process(sha512_context *ctx, const unsigned char data[128])
+OFFLOAD_DECL inline void sha512_process(sha512_context *ctx, const unsigned char data[128])
 {
 	int i;
 	uint64_t temp1, temp2, W[80];
@@ -209,8 +207,7 @@ inline void sha512_process(sha512_context *ctx, const unsigned char data[128])
 /*
 * SHA-512 process buffer
 */
-OFFLOAD_DECL
-inline void sha512_update(sha512_context *ctx, const unsigned char *input, int ilen)
+OFFLOAD_DECL inline void sha512_update(sha512_context *ctx, const unsigned char *input, int ilen)
 {
 	int fill;
 	unsigned int left;
@@ -246,8 +243,7 @@ inline void sha512_update(sha512_context *ctx, const unsigned char *input, int i
 		A_memcpy_n((void *) (ctx->buffer + left), input, ilen);
 };
 
-OFFLOAD_DECL
-static const unsigned char sha512_padding[128] =
+OFFLOAD_DECL static const unsigned char sha512_padding[128] =
 {
 	0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -262,8 +258,7 @@ static const unsigned char sha512_padding[128] =
 /*
 * output = SHA-512( input buffer )
 */
-OFFLOAD_DECL
-void sha512(sha512_context *ctx, const unsigned char *input, int ilen, unsigned char output[64])
+OFFLOAD_DECL void sha512(sha512_context *ctx, const unsigned char *input, int ilen, unsigned char output[64])
 {
 	/* START */
 	ctx->total[0] = 0;

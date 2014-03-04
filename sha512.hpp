@@ -74,8 +74,7 @@ typedef unsigned __int64 uint64_t;
 /**
 * \brief          SHA-512 context structure
 */
-OFFLOAD_DECL
-typedef struct
+OFFLOAD_DECL typedef struct
 {
 	uint64_t total[2];          /*!< number of bytes processed  */
 	uint64_t state[8];          /*!< intermediate digest state  */
@@ -84,8 +83,7 @@ typedef struct
 sha512_context;
 
 /* Internal use */
-OFFLOAD_DECL
-inline void sha512_process(sha512_context *ctx, const unsigned char data[128]);
+OFFLOAD_DECL inline void sha512_process(sha512_context *ctx, const unsigned char data[128]);
 
 /**
 * \brief          SHA-512 process buffer
@@ -94,11 +92,9 @@ inline void sha512_process(sha512_context *ctx, const unsigned char data[128]);
 * \param input    buffer holding the  data
 * \param ilen     length of the input data
 */
-OFFLOAD_DECL
-inline void sha512_update(sha512_context *ctx, const unsigned char *input, int ilen);
+OFFLOAD_DECL inline void sha512_update(sha512_context *ctx, const unsigned char *input, int ilen);
 
 /*
 * output = SHA-512( input buffer )
 */
-OFFLOAD_DECL
-void sha512(sha512_context *ctx, const unsigned char *input, int ilen, unsigned char output[64]);
+OFFLOAD_DECL void sha512(sha512_context *ctx, const unsigned char *input, int ilen, unsigned char output[64]);

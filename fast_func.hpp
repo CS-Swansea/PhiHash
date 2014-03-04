@@ -46,8 +46,7 @@
 * @param len
 *		The number of bytes to copy
 */
-OFFLOAD_DECL
-void A_memcpy_n(void *dest, const unsigned char *src, int len);
+OFFLOAD_DECL void A_memcpy_n(void *dest, const unsigned char *src, int len);
 
 #else
 

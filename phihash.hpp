@@ -69,8 +69,7 @@
 * @return Returns true if the new hash has a lower
 *		hexidecimal value than the old one
 */
-OFFLOAD_DECL
-inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash);
+OFFLOAD_DECL inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash);
 
 /**
 * Convert the SHA-512 Hash to a 128 Character Hexidecimal String
@@ -81,8 +80,7 @@ inline bool cmpHash(unsigned char *newHash, unsigned char *oldHash);
 * @param hashStr
 *		A 129 Character (128 plus a '\0' byte) result buffer for the string
 */
-OFFLOAD_DECL
-inline void hash2Str(unsigned char *hash, char *hashStr);
+OFFLOAD_DECL inline void hash2Str(unsigned char *hash, char *hashStr);
 
 /**
  * Increments a 64 Character String buffer to the next logical 
@@ -91,8 +89,7 @@ inline void hash2Str(unsigned char *hash, char *hashStr);
  * @param str
  *		A 64 Character buffer for the string to permutate
  */
-OFFLOAD_DECL
-inline void permuteStr(unsigned char *str);
+OFFLOAD_DECL inline void permuteStr(unsigned char *str);
 
 /**
 * Fills a 64 Character String buffer with a random
@@ -101,8 +98,7 @@ inline void permuteStr(unsigned char *str);
 * @param str
 *		A 64 Character buffer for the string to randomize
 */
-OFFLOAD_DECL
-inline void randomStr(unsigned char *str);
+OFFLOAD_DECL inline void randomStr(unsigned char *str);
 
 /**
 * Seeds the <state> of our threadsafe RNG
@@ -110,8 +106,7 @@ inline void randomStr(unsigned char *str);
 * @param state
 *		An integer reference which stores the state of the RNG
 */
-OFFLOAD_DECL
-inline int seedThreadSafeRNG(int id) {
+OFFLOAD_DECL inline int seedThreadSafeRNG(int id) {
 	return 25234 + 17 * (id * (int)time(NULL));
 }
 
@@ -122,8 +117,7 @@ inline int seedThreadSafeRNG(int id) {
  * @param state
  *		An integer reference which stores the state of the RNG
  */
-OFFLOAD_DECL
-inline int threadSafeRNG(int &state) {
+OFFLOAD_DECL inline int threadSafeRNG(int &state) {
 	// & 0x7fffffff is equivalent to modulo with RNG_MOD = 2^31
 	return (state = (state * 1103515245 + 12345) & 0x7fffffff);
 }

@@ -30,7 +30,7 @@
 #define REUSE alloc_if(0) free_if(0)
 #define FREE  alloc_if(0) free_if(1)
 
-#define OFFLOAD_DECL __declspec(target(mic))
+#define OFFLOAD_DECL __attribute__ ((target(mic:0)))
 
 #define allocAligned(ptr, size) posix_memalign(&ptr, 32, size);
 
