@@ -10,7 +10,7 @@
 CXX=icpc
 
 # Compiler and Linker flags
-CXXFLAGS= -fast -openmp -mmic 
+CXXFLAGS= -Wall -fast -openmp -fpic
 LXXFLAGS= 
 
 # Inlude and Library paths
@@ -26,7 +26,7 @@ BINF=phihash
 
 all: core
 
-core: 
+core: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(BINF) $(OBJS) $(LXXFLAGS) $(LIBS)
 	rm -rf *o
 
