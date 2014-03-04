@@ -10,7 +10,7 @@
 CXX=icpc
 
 # Compiler and Linker flags
-CXXFLAGS= -fast -openmp -ipo
+CXXFLAGS= -fast -openmp -mmic 
 LXXFLAGS= 
 
 # Inlude and Library paths
