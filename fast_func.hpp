@@ -48,7 +48,7 @@ void A_memcpy_n(void *dest, const unsigned char *src, int len);
 
 /**
 * Copies the content of one 16 byte aligned
-* 64 byte buffer into another
+* 64 byte buffer into another using SSE
 *
 * @param dest
 *		A pointer to the destination buffer

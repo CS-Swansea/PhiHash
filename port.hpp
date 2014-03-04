@@ -22,7 +22,12 @@
 
 #include <offload.h> 
 
-#define __THREADS__ 31
+#define __THREADS__ 120
+
+#define ALLOC alloc_if(1) free_if(0)
+#define REUSE alloc_if(0) free_if(0)
+#define FREE  alloc_if(0) free_if(1)
+
 #define OFFLOAD_DECL //__declspec(target(mic))
 
 #define allocAligned(ptr, size) posix_memalign(&ptr, 32, size);
