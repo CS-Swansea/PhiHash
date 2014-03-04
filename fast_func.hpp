@@ -6,7 +6,8 @@
 #define I16B __m128i
 #define STORE_I16B(ptrD, ptrS) _mm_store_si128(ptrD, *ptrS)
 
-#if false //defined(__AVX__) || !defined(_MSC_VER)
+#if !defined(__USE_OFFLOAD__)
+#if (defined(__AVX__) || !defined(_MSC_VER))
 
 #define I32B __m256i
 #define STORE_I32B(ptrD, ptrS) _mm256_store_si256(ptrD, *ptrS)
@@ -72,6 +73,36 @@ void A_memcpy_n(void *dest, const unsigned char *src, int len);
 									A_memcpy_16_bufferD++;										\
 									STORE_I16B(A_memcpy_16_bufferD, A_memcpy_16_bufferS);		\
 								}
+
+/**
+* Fallback for systems not equipt with AVX instructions
+*
+* @param dest
+*		A pointer to the destination buffer
+*
+* @param src
+*		A pointer to the source buffer
+*
+* @param len
+*		The number of bytes to copy
+*/
+#define A_memcpy_n(dest,src,n) memcpy(dest,src,n)
+
+#endif
+
+#else
+
+/**
+* Copies the content of one 16 byte aligned
+* 64 byte buffer into another using SSE
+*
+* @param dest
+*		A pointer to the destination buffer
+*
+* @param src
+*		A pointer to the source buffer
+*/
+#define A_memcpy_64(dest,src) memcpy(dest,src,64)
 
 /**
 * Fallback for systems not equipt with AVX instructions

@@ -1,6 +1,6 @@
 #include "fast_func.hpp"
 
-#if false //defined(__AVX__) || !defined(_MSC_VER)
+#if defined(__AVX__) || !defined(_MSC_VER)
 
 /**
 * Copies the content of one 32 byte aligned
