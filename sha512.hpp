@@ -79,7 +79,7 @@ typedef struct
 {
 	uint64_t total[2];          /*!< number of bytes processed  */
 	uint64_t state[8];          /*!< intermediate digest state  */
-	ALIGN16 unsigned char buffer[128];  /*!< data block being processed */
+	__ALIGN__ unsigned char buffer[128];  /*!< data block being processed */
 }
 sha512_context;
 

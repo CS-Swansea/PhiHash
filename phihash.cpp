@@ -24,9 +24,9 @@ int main() {
 	RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
 
 	// Buffers to store the global minimum (string, hash) tuple
-	ALIGN16 char minStr[HASH_LEN + 1]; minStr[HASH_LEN] = '\0';
-	ALIGN16 unsigned char minHash[HASH_LEN];
-	ALIGN16 char minHashStr[HASH_STR]; minHashStr[HASH_STR - 1] = '\0';
+	__ALIGN__ char minStr[HASH_LEN + 1]; minStr[HASH_LEN] = '\0';
+	__ALIGN__ unsigned char minHash[HASH_LEN];
+	__ALIGN__ char minHashStr[HASH_STR]; minHashStr[HASH_STR - 1] = '\0';
 
 	// Perform an initial random hash so we have something to compare the threads to initially
 	randomStr((unsigned char*)minStr);
@@ -49,16 +49,16 @@ int main() {
 			#pragma omp parallel num_threads(__THREADS__) private(RNG_STATE) shared(round)
 			{
 				// Setup RNG
-				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num() + (__THREADS__ * round));
+				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num() + (__THREADS__ * (int)round));
 				sha512_context ctx;
 
 				// A thread min buffers
-				ALIGN16 char minThreadStr[HASH_LEN + 1]; minThreadStr[HASH_LEN] = '\0';
-				ALIGN16 unsigned char minThreadHash[HASH_LEN];
+				__ALIGN__ char minThreadStr[HASH_LEN + 1]; minThreadStr[HASH_LEN] = '\0';
+				__ALIGN__ unsigned char minThreadHash[HASH_LEN];
 
 				// Thread compute buffers
-				ALIGN16 char str[HASH_LEN + 1]; str[HASH_LEN] = '\0';
-				ALIGN16 unsigned char hashBuffer[HASH_LEN];
+				__ALIGN__ char str[HASH_LEN + 1]; str[HASH_LEN] = '\0';
+				__ALIGN__ unsigned char hashBuffer[HASH_LEN];
 
 				// Perform initial random hash so we have something to compare off of initially
 				randomStr((unsigned char*) minThreadStr);
