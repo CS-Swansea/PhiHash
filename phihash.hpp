@@ -122,6 +122,15 @@ OFFLOAD_DECL inline int threadSafeRNG(int &state) {
 	return (state = (state * 1103515245 + 12345) & 0x7fffffff);
 }
 
+OFFLOAD_DECL inline int threadSafeRNG() {
+	int rnd;
+	#pragma omp critical
+	{
+		rnd = rand();
+	}
+	return rnd;
+}
+
 /**
 * Run a series of checks on the SHA-512 function to make sure it 
 * still produces correct results

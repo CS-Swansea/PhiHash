@@ -4,7 +4,7 @@
  * A local copy of this variable 
  * name will exist in each thread... 
  */
-OFFLOAD_DECL int RNG_STATE;
+//OFFLOAD_DECL int RNG_STATE;
 
 /**
  * Program entry point 
@@ -23,7 +23,8 @@ int main() {
 	//#pragma offload_transfer target(mic)
 
 	// Setup RNG
-	RNG_STATE = seedThreadSafeRNG(omp_get_thread_num());
+	srand((unsigned int) time(NULL));
+	//RNG_STATE = seedThreadSafeRNG(1);
 
 	// Buffers to store the global minimum (string, hash) tuple
 	__ALIGN__ char minStr[HASH_LEN + 1]; minStr[HASH_LEN] = '\0';
@@ -48,10 +49,10 @@ int main() {
 		{
 			newHash = false;
 
-			#pragma omp parallel num_threads(__THREADS__) private(RNG_STATE) shared(round)
+			#pragma omp parallel num_threads(__THREADS__) shared(round)
 			{
 				// Setup RNG
-				RNG_STATE = seedThreadSafeRNG(omp_get_thread_num() + (__THREADS__ * (int)round));
+				//RNG_STATE = seedThreadSafeRNG(omp_get_thread_num() + (__THREADS__ * (int)round));
 				sha512_context ctx;
 
 				// A thread min buffers
@@ -205,12 +206,12 @@ OFFLOAD_DECL inline void permuteStr(unsigned char *str) {
 
 	randomStr(str);
 #elif __PERMUTE_SCHEDULE__ == __RND_PERMUTE__
-	int index = threadSafeRNG(RNG_STATE) % 64;
-	str[index] = 32 + ((char) (threadSafeRNG(RNG_STATE) % 95));
+	int index = threadSafeRNG() % 64;
+	str[index] = 32 + ((char) (threadSafeRNG() % 95));
 #elif __PERMUTE_SCHEDULE__ == __RND_LOOKUP_PERMUTE__
 	const char rndChars[PRINTABLE_CHARS+1] = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-	int index = threadSafeRNG(RNG_STATE) % 64;
-	str[index] = rndChars[(threadSafeRNG(RNG_STATE) % PRINTABLE_CHARS)];
+	int index = threadSafeRNG() % 64;
+	str[index] = rndChars[(threadSafeRNG() % PRINTABLE_CHARS)];
 #else
 	randomStr(str);
 #endif
@@ -225,7 +226,7 @@ OFFLOAD_DECL inline void permuteStr(unsigned char *str) {
 */
 OFFLOAD_DECL inline void randomStr(unsigned char *str) {
 	for (int i = 0; i < HASH_LEN; i++) {
-		str[i] = 32 + ((unsigned char) (threadSafeRNG(RNG_STATE) % 95));
+		str[i] = 32 + ((unsigned char) (threadSafeRNG() % 95));
 	}
 };
 
