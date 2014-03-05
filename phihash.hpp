@@ -100,28 +100,6 @@ OFFLOAD_DECL inline void permuteStr(unsigned char *str);
 */
 OFFLOAD_DECL inline void randomStr(unsigned char *str);
 
-/**
-* Seeds the <state> of our threadsafe RNG
-*
-* @param state
-*		An integer reference which stores the state of the RNG
-*/
-OFFLOAD_DECL inline int seedThreadSafeRNG(int id) {
-	return 25234 + 17 * (id * (int)time(NULL));
-}
-
-/**
- * This is a thread safe random number generator, seed it using the 
- * accompanying function
- *
- * @param state
- *		An integer reference which stores the state of the RNG
- */
-OFFLOAD_DECL inline int threadSafeRNG(int &state) {
-	// & 0x7fffffff is equivalent to modulo with RNG_MOD = 2^31
-	return (state = (state * 1103515245 + 12345) & 0x7fffffff);
-}
-
 OFFLOAD_DECL inline int threadSafeRNG() {
 	int rnd;
 	#pragma omp critical

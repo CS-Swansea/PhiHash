@@ -1,11 +1,5 @@
 #include "phihash.hpp"
 
-/* 
- * A local copy of this variable 
- * name will exist in each thread... 
- */
-//OFFLOAD_DECL int RNG_STATE;
-
 /**
  * Program entry point 
  */
@@ -24,7 +18,6 @@ int main() {
 
 	// Setup RNG
 	srand((unsigned int) time(NULL));
-	//RNG_STATE = seedThreadSafeRNG(1);
 
 	// Buffers to store the global minimum (string, hash) tuple
 	__ALIGN__ char minStr[HASH_LEN + 1]; minStr[HASH_LEN] = '\0';
@@ -49,7 +42,7 @@ int main() {
 		{
 			newHash = false;
 
-			#pragma omp parallel num_threads(__THREADS__) shared(round)
+			#pragma omp parallel num_threads(__THREADS__)
 			{
 				// Setup RNG
 				//RNG_STATE = seedThreadSafeRNG(omp_get_thread_num() + (__THREADS__ * (int)round));
@@ -103,6 +96,7 @@ int main() {
 		double t2 = (double) (WORK_SIZE * __THREADS__) / (omp_get_wtime() - t1);
 
 		tA = ((tA * (double) round) + t2) / (double)(round + 1);
+		round++;
 
 		std::cout << std::flush << "  Cores : " << __THREADS__ << " Hash/s : " << (uint64_t) t2 << " avg: " << (uint64_t) tA << '\r';
 
@@ -117,8 +111,6 @@ int main() {
 			std::cout << "    0's : " << j << std::endl << std::endl;
 			std::cout << "Minimum : " << minHashStr << std::endl << std::endl;
 		}
-
-		round++;
 	}
 
 	PAUSE
